@@ -1,0 +1,27 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "node.js + express.js +  mysql ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/9958/NEMBlog.git"
+  },
+  "author": "rin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/9958/NEMBlog/issues"
+  },
+  "homepage": "https://github.com/9958/NEMBlog#readme",
+  "dependencies": {
+    "body-parser": "^1.13.3",
+    "colors": "^1.1.2",
+    "express": "^4.13.3",
+    "multer": "^1.0.3",
+    "mysql": "^2.8.0",
+    "orm": "^2.1.26"
+  }
+}
