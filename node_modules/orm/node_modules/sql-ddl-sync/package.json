@@ -1,0 +1,73 @@
+{
+  "author": {
+    "name": "Diogo Resende",
+    "email": "dresende@thinkdigital.pt"
+  },
+  "name": "sql-ddl-sync",
+  "description": "NodeJS SQL DDL Synchronization",
+  "keywords": [
+    "sql",
+    "ddl",
+    "sync",
+    "mysql",
+    "postgres",
+    "sqlite"
+  ],
+  "version": "0.3.11",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/dresende/node-sql-ddl-sync.git"
+  },
+  "main": "./lib/Sync",
+  "scripts": {
+    "test": "make test"
+  },
+  "engines": {
+    "node": "*"
+  },
+  "analyse": false,
+  "dependencies": {
+    "lodash": "2.4.1"
+  },
+  "devDependencies": {
+    "mocha": "1.14.0",
+    "should": "2.0.2",
+    "commander": "~2.0.0",
+    "orm": "2.1.23"
+  },
+  "gitHead": "a0ff01b48df28487c8cb662585fa42fa8b383ddd",
+  "bugs": {
+    "url": "https://github.com/dresende/node-sql-ddl-sync/issues"
+  },
+  "homepage": "https://github.com/dresende/node-sql-ddl-sync",
+  "_id": "sql-ddl-sync@0.3.11",
+  "_shasum": "8382cd25be2e238d16a6600fee7e503710705a48",
+  "_from": "sql-ddl-sync@0.3.11",
+  "_npmVersion": "2.7.1",
+  "_nodeVersion": "1.6.1",
+  "_npmUser": {
+    "name": "dxg",
+    "email": "arek01@gmail.com"
+  },
+  "maintainers": [
+    {
+      "name": "dresende",
+      "email": "dresende@thinkdigital.pt"
+    },
+    {
+      "name": "dxg",
+      "email": "arek01@gmail.com"
+    }
+  ],
+  "dist": {
+    "shasum": "8382cd25be2e238d16a6600fee7e503710705a48",
+    "size": 13394,
+    "noattachment": false,
+    "tarball": "http://registry.npm.taobao.org/sql-ddl-sync/download/sql-ddl-sync-0.3.11.tgz"
+  },
+  "directories": {},
+  "publish_time": 1426988217333,
+  "_cnpm_publish_time": 1426988217333,
+  "_resolved": "https://registry.npm.taobao.org/sql-ddl-sync/download/sql-ddl-sync-0.3.11.tgz"
+}
