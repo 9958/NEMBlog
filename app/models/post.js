@@ -1,16 +1,16 @@
 var moment = require('moment');
 
 module.exports = function (orm, db) {
-  var Comment = db.define('comment', {
+  var Post = db.define('post', {
     id : {type : 'serial', key : true},
-    post_org_id : {type: 'text', size : 50},
-    post_slug : {type : 'text', size : 60},
-    author : {type : 'text', size : 60, required : true},
-    email : {type : 'text', size : 60},
-    url : {type : 'text', size : 200},
-    ip : {type : 'text', size : 50},
+    org_id : {type: 'text', size : 50},
+    slug : {type : 'text', size : 60},
+    tag : {type : 'text', size : 100},
+    keywords : {type : 'text', size : 160},
+    description : {type : 'text', size : 255},
     status : {type: 'integer', size : 2},
-    content      : { type: 'text', size : 255, required : true},
+    content_html : { type: 'text', required : true},
+    content      : { type: 'text', required : true},
     created : { type: 'date', required : true, time : true }
   },
   {
@@ -20,19 +20,19 @@ module.exports = function (orm, db) {
       }
     },
     validations: {
-      content   : orm.enforce.ranges.length(1, 1024)
+      description   : orm.enforce.ranges.length(1, 255)
     },
     methods: {
       serialize: function () {
         return {
           id : this.id,
-          post_org_id : this.post_org_id,
-          post_slug : this.post_slug,
-          author : this.author,
-          email : this.email,
-          url : this.url,
-          ip : this.ip,
+          org_id : this.org_id,
+          slug : this.slug,
+          tag : this.tag,
+          keywords : this.keywords,
+          description : this.description,
           status : this.status,
+          content_html : this.content_html,
           content      : this.content,
           created : moment(this.created).fromNow()
         }
