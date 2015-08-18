@@ -1,34 +1,20 @@
 var path = require('path');
 var express = require('express');
-var colors      = require('colors')
+var colors = require('colors')
+var debug = require('debug')('NEMBlog');
 var settings = require('./config/settings');
 var environment = require('./config/environment');
 var routes = require('./config/routes');
 var models = require('./app/models');
 
-module.exports.start = function(done){
-	var app = express();
+var app = express();
 
-	environment(app);
-	routes(app);
+environment(app);
+routes(app);
 
-	app.listen(settings.port, function(){
-		console.log( ("listening on port " + settings.port).green );
-
-		if(done){
-			return done(null, app, server);
-		}
-	}).on('error',function(e){
-		if(e.code = 'EADDRINUSE'){
-			console.log('Address in use. Is the Server already running?'.red);
-		}
-		if(done){
-			return done(e);
-		}
+models.sequelize.sync().then(function(){
+	var server = app.listen(app.get('port'),function(){
+		debug('listening on port ' + server.address().port);
 	});
-}
+});
 
-//If run:"node index.js" then automatically start the server
-if(path.basename(process.argv[1],'.js') == path.basename(__filename,'.js')){
-	module.exports.start();
-}

@@ -1,24 +1,36 @@
 var path = require('path');
 var express = require('express');
 var bodyParser = require('body-parser');
+var session = require('express-session');
+var cookieParser = require('cookie-parser');
 var multer = require('multer');
 var settings = require('./settings');
-var models = require('../app/models');
 
 
 module.exports = function(app){
-	app.use(express.static(path.join(settings.path, 'public')));
+	app.set('port', settings.port);
+	//template engine
+	app.engine('.html', require('ejs').__express);
+	app.set('views',path.join(settings.path, 'app/views'));
+	app.set('view engine', 'html');
+
 	app.use(bodyParser.json()); // for parsing application/json
 	app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-	//app.use(multer()); // for parsing multipart/form-data
-	app.use(function(req, res, next){
-		models(function(err, db){
-			if(err) return next(err);
+	// app.use(multer()); // for parsing multipart/form-data
+	
+	//session
+	app.use(session({
+	  resave: false, // don't save session if unmodified
+	  saveUninitialized: false, // don't create session until something stored
+	  secret: 'keyboard cat'
+	}));
+	app.use(cookieParser('my secret here'));
+	
+	//static dir
+	var theme_static_dir = path.join(settings.path, 'app/views/theme/' + settings.theme + '/assets');
+	var admin_static_dir = path.join(settings.path, 'app/views/admin/assets');
+	app.use("/admin/assets", express.static(admin_static_dir));
+  	app.use("/theme/assets", express.static(theme_static_dir));
+  	app.use(express.static(path.join(settings.path, 'public')));
 
-			req.models = db.models;
-			req.db = db;
-
-			return next();
-		});
-	});
 }
