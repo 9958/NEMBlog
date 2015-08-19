@@ -1,4 +1,4 @@
 module.exports = {
-	c_home : require('./home'),
-	c_admin : require('./admin')
+	home : require('./home'),
+	admin : require('./admin')
 };
