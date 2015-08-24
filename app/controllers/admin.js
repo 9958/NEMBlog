@@ -97,7 +97,7 @@ module.exports = {
     }
 
     
-  }
+  },
   
 
   /*
