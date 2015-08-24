@@ -7,28 +7,12 @@ var models  = require('../models');
 
 
 module.exports = {
-  auth_admin: function(req, res, next){
-    if(req.session.admin){
-      return next();
-    }else{
-      var cookie = req.cookies[settings.auth_cookie_name];
-      if(!cookie)
-        return res.redirect('/admin/login');
-
-      var auth_token = util.decrypt(cookie, settings.session_secret);
-      var auth = auth_token.split('\t');
-      var admin_name = auth[0];
-
-      models.admin.findOne({where:{name:admin_name}}).then(function(result){
-        if(result){
-          req.session.admin = result;
-          return next();
-        }else{
-          return res.redirect('/admin/login')
-        }
-      });
-    }
-  },
+  
+  /**
+   * =======================================================================
+   * post 模块 
+   * =======================================================================
+   */
   postIndex: function(req, res){
     models.post.findAll().then(function(results){
         res.render('admin/post_index', {layout: false, post_list: results});
@@ -73,6 +57,54 @@ module.exports = {
         });
     }
   },
+  /**
+   *============================================================================
+   * page 模块
+   *============================================================================
+   */
+  pageIndex: function(req, res){
+    models.page.findAll().then(function(results){
+        res.render('admin/page_index', {layout: false, page_list: results});
+    });
+  },
+  pageWrite: function(req, res){
+    if(req.method == "GET"){
+      res.render('admin/page_write', {layout: false});
+    }else if(req.method == "POST"){
+      var page = _.pick(req.body, 'title', 'slug','content','keywords','description');
+      page.content_html = marked(page.content);
+      page.status = 1;
+      models.page.create(page).then(function(result){
+          res.redirect('/admin/page/edit/' + result.id);
+      });
+    }
+  },
+  pageEdit: function(req, res){
+    if(req.method == "GET"){
+      var id = req.params.id;
+      models.page.findById(id).then(function(result){
+          res.render('admin/page_edit', {layout: false, page: result});
+      }).catch(function(error) {
+          res.redirect('/admin/page');
+      });
+    }else if(req.method == "POST"){
+      var page = _.pick(req.body, 'title', 'slug','content','keywords','description');
+      page.content_html = marked(page.content);
+      page.status = 1;
+      models.page.update(page,{where:{id: req.body.id}}).then(function(){
+          res.redirect('/admin/page/edit/' + req.body.id);
+      });
+    }
+
+    
+  }
+  
+
+  /*
+  *===============================================================================
+  * 登录 模块
+  *===============================================================================
+   */
   login: function(req, res){
     if(req.method == "GET"){
         res.render('admin/login', {layout: false});
@@ -110,6 +142,34 @@ module.exports = {
   index: function(req, res){
     res.render('admin/index', {layout: false});
   },
+  //验证
+  auth_admin: function(req, res, next){
+    if(req.session.admin){
+      return next();
+    }else{
+      var cookie = req.cookies[settings.auth_cookie_name];
+      if(!cookie)
+        return res.redirect('/admin/login');
+
+      var auth_token = util.decrypt(cookie, settings.session_secret);
+      var auth = auth_token.split('\t');
+      var admin_name = auth[0];
+
+      models.admin.findOne({where:{name:admin_name}}).then(function(result){
+        if(result){
+          req.session.admin = result;
+          return next();
+        }else{
+          return res.redirect('/admin/login')
+        }
+      });
+    }
+  },
+  /**
+   * ==============================================================================
+   * 初始化 模块
+   * ==============================================================================
+   */
   install: function(req, res, next){
 
     models.admin.count().then(function(c) {
