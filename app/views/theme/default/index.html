@@ -1,0 +1,66 @@
+<section id="main" class="container">
+  <section class="posts block">
+  <article class="post">
+<script type="text/javascript">
+    /*760*90 创建于 2015-05-15*/
+    var cpro_id = "u2105002";
+</script>
+<script src="http://cpro.baidustatic.com/cpro/ui/c.js" type="text/javascript"></script>
+
+
+  
+  </article>
+ 
+    <%posts.forEach(function(item){%>
+    <article class="post">
+      <h2 class="title">
+          <a href="<%=site_url%>/post/<%=item.slug%>" title="<%=item.title%>"><%=item.title%></a>
+      </h2>
+
+      <div class="meta">
+        <time><%=item.created%></time>
+      </div>
+      <div class="entry"><%-item.content%></div>
+    </article>
+    <%})%>
+  </section>
+  <div id="navigation">
+    <table width='100%'>
+      <tbody>
+      <tr>
+        <td width='120' align='left'>
+          <%if(crtP>1){%>
+          <div class="alignleft">
+            <a href="<%=site_url%>/p/<%=(crtP - 1)%>">上一页</a>
+          </div>
+          <%}%>
+        </td>
+        <td width='auto' align='center'>
+          <strong class="fade">
+            <%=crtP%>/<%=maxP%>
+          </strong>
+        </td>
+        <td width='120' align='right'>
+          <%if(nextP>crtP){%>
+          <div class="alignright">
+            <a href="<%=site_url%>/p/<%=nextP%>">下一页</a>
+          </div>
+          <%}%>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+    
+    <div class="sidebar">
+        <% include ./public/right %>
+	<% include ./public/ad %>
+	<% include ./public/hotpost %>
+        <% include ./public/tag %>      
+        <% include ./public/robot %>
+        <% include ./public/recentcomments %>
+	<% include ./public/hotcomments %>
+        <% include ./public/links %>
+    </div>
+
+</section>

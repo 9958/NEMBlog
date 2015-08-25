@@ -10,7 +10,9 @@ module.exports = function(sequelize, DataTypes) {
     url: DataTypes.STRING,
     ip: DataTypes.STRING,
     status: DataTypes.INTEGER,
-    content: DataTypes.STRING
+    content: DataTypes.STRING,
+    post_id: DataTypes.STRING,
+    avatar: DataTypes.STRING
   });
 
   return Comment;

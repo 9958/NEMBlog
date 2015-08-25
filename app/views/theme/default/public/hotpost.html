@@ -1,0 +1,13 @@
+<div class="block">
+    <div class="widget about">
+      <strong class="wt">热门文章</strong>
+      <div class="wc">
+          <ul>
+              <%hotpost.forEach(function(item){%>
+              <li><a href="<%=site_url%>/post/<%=item.slug%>" title="<%=item.title%>"><%=: item.title | truncate:22 %></a></li>
+              <%})%>
+          </ul>
+        <div class="sep10"></div>
+      </div>
+    </div>
+  </div>

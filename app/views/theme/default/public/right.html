@@ -1,0 +1,35 @@
+  
+<div class="block">
+    <div class="widget about">
+      <strong class="wt"><% if(user && user.username){%>个人信息<%}else{%>登录/注册<%}%></strong>
+      <div class="wc">
+          <style>
+              .login_box a{ display: block; float: left; width: 110px;height:40px; font-size: 14px; font-weight: bold; margin-left: 12px; text-align: center; background-color: #F0F0F0; color:#333333; line-height: 40px;}
+              .login_box a:hover{ text-decoration:none; background-color: #cccccc; color: white;}
+          </style>
+          <p >
+              <% if(user && user.username){%>
+              您好，<span style="color:#6c6c6c;"><%if(user.nickname) {%><%=user.nickname%><%}else{%><%=user.username%><%}%></span> &nbsp; <a href="/users/logout">退出</a>
+              <%}else{%>
+              <div class="login_box">
+                <a href="<%=site_url%>/users/login">登录</a> <a href="<%=site_url%>/users/regist">注册</a>
+            </div>
+            <%}%>
+        </p>
+        <div class="sep10"></div>
+      </div>
+    </div>
+    <div class="widget about">
+      <strong class="wt">关于我</strong>
+      <div class="wc">
+        <p>
+          <img src="http://sfault-avatar.b0.upaiyun.com/249/218/2492188166_medium40" alt="rin" align="left"
+               style="margin-right: 7px;">rin，后端工程师，；就职于<a href="http://www.shinedeliver.com/" target="_blank">兴安得力</a>
+          <br/>关注前后端技术，欢迎交流。承接各类网站系统，价格从优，预祝合作愉快~<br/>Email:
+          1489760568@qq.com
+        </p>
+        
+        
+      </div>
+    </div>
+  </div>

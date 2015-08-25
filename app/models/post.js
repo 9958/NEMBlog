@@ -10,6 +10,7 @@ module.exports = function(sequelize, DataTypes) {
     keywords: DataTypes.STRING,
     description: DataTypes.STRING,
     status: DataTypes.INTEGER,
+    clicknum: DataTypes.INTEGER,
     content_html: DataTypes.TEXT,
     content: DataTypes.TEXT
   });

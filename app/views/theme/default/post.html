@@ -1,0 +1,135 @@
+<style>
+.container{ max-width:1000px;}
+</style>
+<div id="main" class="container post">
+<article class="post" style="margin-bottom:0;padding-top:0;">
+<div>
+<script type="text/javascript">
+    /*960*60 创建于 2015-05-15*/
+    var cpro_id = "u2105048";
+</script>
+<script src="http://cpro.baidustatic.com/cpro/ui/c.js" type="text/javascript"></script>
+
+<div style="clear:both;"></div>
+</div>
+ 
+</article>
+  <h1 class="title"><%=post.title%></h1>
+  <article class="post block">
+ 
+    <div class="entry">
+<%-post.content_html%>
+
+<%if(re_result && re_result.length > 0){%>
+      <h2>您可能感兴趣的文章<h2>
+ <%re_result.forEach(function(item){%>
+        <p class="relative_article">
+          <a href="<%=site_url%>/post/<%=item.slug%>" title="<%=item.title%>" target="_blank" class="relative_article_title"><%=item.title%></a>
+        </p>
+        <%})%>
+      <%}%>
+</div>
+    <div class="meta">
+      <time><%=post.created%></time>
+    </div>
+    <div class="tags">
+      <%if(post.tags && post.tags.length > 0){%>
+      <p>
+        Tags:
+        <%
+        for(var i=0;i < post.tags.length;i++) {
+        if(i+1 < post.tags.length){%>
+        <a href="<%=site_url%>/tag/<%=post.tags[i]%>" title="<%=post.tags[i]%>"><%=post.tags[i]%></a>，
+        <%}else{%>
+        <a href="<%=site_url%>/tag/<%=post.tags[i]%>" title="<%=post.tags[i]%>"><%=post.tags[i]%></a>
+        <%}}%>
+      </p>
+      <%}%>
+    </div>
+    <div class="share" style="margin-top: 10px;">
+        <!-- Baidu Button BEGIN -->
+        <div id="bdshare" class="bdshare_t bds_tools get-codes-bdshare">
+        <span class="bds_more">分享到：</span>
+        <a class="bds_qzone"></a>
+        <a class="bds_tsina"></a>
+        <a class="bds_tqq"></a>
+        <a class="bds_renren"></a>
+        <a class="bds_t163"></a>
+        <a class="shareCount"></a>
+        </div>
+        <script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=6531798" ></script>
+        <script type="text/javascript" id="bdshell_js"></script>
+        <script type="text/javascript">
+        document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+        </script>
+        <!-- Baidu Button END -->
+    </div>
+  </article>
+  <%if(comments.length>0){%>
+  <div id="comments" class="block">
+    <ol class="commentlist">
+      <%for(var i=0;i < comments.length ;i++){%>
+      <li id='comment-<%=comments[i]._id%>' class='comment clearfix'>
+        <img src="<%=comments[i].avatar%>" width='36' height='36' class='avatar' alt="">
+
+        <div class="content">
+          <div class="info">
+            <%if(typeof comments[i].url == "undefined"){%>
+            <span class="reviewer"><%=comments[i].author%></span>
+            <%}else{%>
+            <a href="<%=comments[i].url%>" class="reviewer" url='external nofollow'><%=comments[i].author%></a>
+            <%}%>
+            <time datetime='<%=comments[i].created%>'><%=comments[i].created.substring(0,10)%></time>
+            <div class="floor"><%=i+1%></div>
+          </div>
+          <div id="commentbody-53684" class='description' itemprop='description'><%- comments[i].content%></div>
+        </div>
+      </li>
+      <%}%>
+    </ol>
+  </div>
+  <%}%>
+  <div id="reply" class="block inner">
+    <form action="/comment" method='post' id="cmtform">
+      <div id="respond" class="clearfix">
+        <div id="reviewer-info">
+          <div class="row">
+            <input type="text" name='a_uthor' value='' size='24' tabindex='1' required='' id="author"
+                   class="textfield">
+            <label for="author" class="small">Name (required)</label>
+          </div>
+          <div class="row">
+            <input type="text" name='e_mail' value='' size='24' tabindex='2' required='' id="email" class="textfield">
+            <label for="email" class="small">E-mail (required)</label>
+          </div>
+          <div class="row">
+            <input type="text" name='u_rl' value='' size='24' tabindex='3' id="url" class="textfield">
+            <label for="url" class="small">Website</label>
+          </div>
+          <div class="row">
+            <textarea name="c_ontent" id="comment" cols="50" rows="7" tabindex='4'></textarea>
+          </div>
+          <div class="row">
+            <input id="comment-submit" name='submit' type='submit' tabindex='5' value='Post Comment' class="button">
+            <input type="hidden" name='id' value='<%=post._id%>'>
+            <input type="hidden" name='slug' value='<%=post.slug%>'>
+            <input type="text" name="author" value="" id="no_author" />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<script src='/libs/prettify.js' type='text/javascript'></script>
+<script type="text/javascript">
+  (function () {
+    $("pre").addClass("prettyprint");
+    prettyPrint();
+  })()
+</script>
+
+<script type="text/javascript">
+/*120*270，创建于2014-3-29*/
+var cpro_id = "u1505445";
+</script>
+<script src="http://cpro.baidustatic.com/cpro/ui/f.js" type="text/javascript"></script>

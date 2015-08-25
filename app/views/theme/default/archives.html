@@ -1,0 +1,23 @@
+<div id="main" class="container page">
+  <h1 class="title">文章存档</h1>
+  <article class="post block posts">
+    <div class="entry archives">
+      <%archives.forEach(function(year){%>
+      <h2><%=year.year%></h2>
+      <ul>
+        <%year.archives.forEach(function(item){%>
+        <li>
+          <time datetime="<%=item.created%>"><%=item.created%></time>
+          <a href="<%=site_url%>/post/<%=item.slug%>" title="<%=item.title%>"><%=item.title%></a>
+          <span class="clicknum"><%=item.clicknum%>次浏览</span>
+        </li>
+        <%})%>
+      </ul>
+      <%})%>
+    </div>
+  </article>
+  <div class="sidebar" style="margin-top: 43px;">
+  	<% include ./public/right %>
+	<% include ./public/ad %>
+  </div>
+</div>

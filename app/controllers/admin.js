@@ -1,6 +1,5 @@
 var _       = require('lodash');
 var marked = require('marked');
-var helpers = require('./_helpers');
 var settings = require('../../config/settings');
 var util = require('../lib/util');
 var models  = require('../models');
@@ -97,6 +96,36 @@ module.exports = {
     }
 
     
+  },
+  /*
+  *===============================================================================
+  * 评论 模块
+  *===============================================================================
+   */
+  commentIndex: function(req, res){
+    var limit = 100;
+    var status = req.query['status'];
+    if(!status) status = 1;
+
+    models.comment.findAndCountAll({
+      where: {status:status},
+      offset: 0,
+      limit: limit
+    }).then(function(result){
+      console.dir(result.count);
+      console.dir(result.rows);
+      res.render('admin/comment_index', {layout: false, comment_list: result.rows, status: status});
+    });
+  },
+  commentDelete: function(req, res){
+    if(req.method == "GET"){
+        var id = req.params.id;
+        models.comment.destroy({where:{id: id}}).then(function(){
+            res.redirect('/admin/comment');
+        }).catch(function(error) {
+            res.redirect('/admin/comment');
+        });
+    }
   },
   
 
