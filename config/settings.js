@@ -2,7 +2,7 @@ var path = require('path');
 
 var settings = {
 	//base config
-	path: process.env.PATH || path.normalize(path.join(__dirname,'..')),
+	path: path.normalize(path.join(__dirname,'..')),
 	port: process.env.NODE_PORT || 3000,
 	database: process.env.DATABASE || "mysql://root:@localhost:3306/nemblog",
 	theme: process.env.THEME || 'default',//主题名称

@@ -8,6 +8,7 @@ var models  = require('../models');
 module.exports = {
 	//homepage
 	index: function(req, res, next){
+		console.dir(1);return;
 		models.post.count().then(function(count){
 			var maxPage = parseInt(count / settings.postNum) + (count % settings.postNum ? 1:0);
 			var currentPage = isNaN(parseInt(req.params[0])) ? 1 : parseInt(req.params[0]);
@@ -196,9 +197,10 @@ module.exports = {
 					archives: archiveList, 
 					name: settings.name,
 					keywords: settings.keywords,
-					description: settings.description
+					description: settings.description,
+					user: {}
 				};
-				res.render('theme/' + config.theme + '/archives', dataObj);
+				res.render('theme/' + settings.theme + '/archives', dataObj);
 
 			});
 
@@ -216,7 +218,7 @@ module.exports = {
 				description: settings.description, 
 				title: settings.name + ' › ' + page.title
 			}
-			res.render('theme/' + config.theme + '/page', dataObj);
+			res.render('theme/' + settings.theme + '/page', dataObj);
 		});
 	},
 	comment: function(req, res, next){
@@ -281,7 +283,7 @@ module.exports = {
 				tag_name: req.params.tag
 			};
 
-			res.render('theme/' + config.theme + '/tag', dataObj);
+			res.render('theme/' + settings.theme + '/tag', dataObj);
 		});
 	}
 }

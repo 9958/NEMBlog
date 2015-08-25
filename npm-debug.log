@@ -1,0 +1,68 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'install', 'gravatar=1.0.6' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.33
+4 verbose readDependencies using package.json deps
+5 verbose cache add [ 'gravatar=1.0.6', null ]
+6 verbose cache add name=undefined spec="gravatar=1.0.6" args=["gravatar=1.0.6",null]
+7 verbose parsed url { protocol: null,
+7 verbose parsed url   slashes: null,
+7 verbose parsed url   auth: null,
+7 verbose parsed url   host: null,
+7 verbose parsed url   port: null,
+7 verbose parsed url   hostname: null,
+7 verbose parsed url   hash: null,
+7 verbose parsed url   search: null,
+7 verbose parsed url   query: null,
+7 verbose parsed url   pathname: 'gravatar=1.0.6',
+7 verbose parsed url   path: 'gravatar=1.0.6',
+7 verbose parsed url   href: 'gravatar=1.0.6' }
+8 silly lockFile db8defd3-gravatar-1-0-6 gravatar=1.0.6
+9 verbose lock gravatar=1.0.6 /Users/mac/.npm/db8defd3-gravatar-1-0-6.lock
+10 silly lockFile db8defd3-gravatar-1-0-6 gravatar=1.0.6
+11 silly lockFile db8defd3-gravatar-1-0-6 gravatar=1.0.6
+12 verbose addNamed [ 'gravatar=1.0.6', '' ]
+13 verbose addNamed [ null, '*' ]
+14 silly lockFile 34ec6376-gravatar-1-0-6 gravatar=1.0.6@
+15 verbose lock gravatar=1.0.6@ /Users/mac/.npm/34ec6376-gravatar-1-0-6.lock
+16 silly addNameRange { name: 'gravatar=1.0.6', range: '*', hasData: false }
+17 verbose request where is /gravatar=1.0.6
+18 verbose request registry https://registry.npm.taobao.org/
+19 verbose request id 50c58ac9fc5a92f1
+20 verbose url raw /gravatar=1.0.6
+21 verbose url resolving [ 'https://registry.npm.taobao.org/', './gravatar%3D1.0.6' ]
+22 verbose url resolved https://registry.npm.taobao.org/gravatar%3D1.0.6
+23 verbose request where is https://registry.npm.taobao.org/gravatar%3D1.0.6
+24 info trying registry request attempt 1 at 20:49:09
+25 http GET https://registry.npm.taobao.org/gravatar%3D1.0.6
+26 http 404 https://registry.npm.taobao.org/gravatar%3D1.0.6
+27 silly registry.get cb [ 404,
+27 silly registry.get   { 'content-type': 'application/json',
+27 silly registry.get     'cache-control': 'max-age=0',
+27 silly registry.get     'content-length': '2',
+27 silly registry.get     'accept-ranges': 'bytes',
+27 silly registry.get     date: 'Tue, 25 Aug 2015 12:49:11 GMT',
+27 silly registry.get     via: '1.1 varnish',
+27 silly registry.get     age: '0',
+27 silly registry.get     connection: 'keep-alive',
+27 silly registry.get     'x-served-by': 'cache-nrt6129-NRT',
+27 silly registry.get     'x-cache': 'MISS',
+27 silly registry.get     'x-cache-hits': '0',
+27 silly registry.get     'x-timer': 'S1440506951.115859,VS0,VE195' } ]
+28 silly lockFile 34ec6376-gravatar-1-0-6 gravatar=1.0.6@
+29 silly lockFile 34ec6376-gravatar-1-0-6 gravatar=1.0.6@
+30 error 404 Not Found
+30 error 404
+30 error 404 'gravatar=1.0.6' is not in the npm registry.
+30 error 404 You should bug the author to publish it
+30 error 404 It was specified as a dependency of 'blog'
+30 error 404
+30 error 404 Note that you can also install from a
+30 error 404 tarball, folder, or http url, or git url.
+31 error System Darwin 13.3.0
+32 error command "node" "/usr/local/bin/npm" "install" "gravatar=1.0.6"
+33 error cwd /Users/mac/myProject/NEMBlog
+34 error node -v v0.10.33
+35 error npm -v 1.4.28
+36 error code E404
+37 verbose exit [ 1, true ]
