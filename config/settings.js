@@ -14,7 +14,7 @@ var settings = {
 	cookie_secret: process.env.COOKIE_SECRET || 'a743894a0e',//session加密串
 	name: process.env.NAME || 'rin部落',
 	version: process.env.VERSION || '1.0.0',
-	site_url: process.env.SITE_URL || 'http://www.9958.pw',
+	site_url: process.env.SITE_URL || 'http://localhost:3000',
 	keywords: process.env.KEYWORDS || 'php 技术 入门 基础 教程|node.js入门|nodejs入门|ecshop 商城|web|nodejs|nginx|MySQL|Linux|appfog|mongodb|js|javascript|jquery|div|css|网页|设计|布局',
 	description: process.env.DESCRIPTION || 'rin部落一个以web应用为中心,面向网络上所有作为Web开发的读者及程序爱好者的技术博客;博客主要以学习并钻研技术,分享nodejs,nginx,MySQL,Linux,appfog,mongodb,js,javascript,jquery,div,css,网页,设计,布局等相关技术领域的知识与技术，期待与志同道合的朋友共同进步.',
 	

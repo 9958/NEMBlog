@@ -8,7 +8,6 @@ var models  = require('../models');
 module.exports = {
 	//homepage
 	index: function(req, res, next){
-		console.dir(1);return;
 		models.post.count().then(function(count){
 			var maxPage = parseInt(count / settings.postNum) + (count % settings.postNum ? 1:0);
 			var currentPage = isNaN(parseInt(req.params[0])) ? 1 : parseInt(req.params[0]);
@@ -52,11 +51,12 @@ module.exports = {
 						title: title,
 						keywords: settings.keywords,
 						description: settings.description,
-						post: result,
+						posts: result,
 						crtP: currentPage,
 						maxP: maxPage,
 						nextP: nextPage,
-						hotpost: hot_post,
+						hotpost: [],
+						user: {}
 					};
 
 					res.render('theme/' + settings.theme + '/index',index_obj);

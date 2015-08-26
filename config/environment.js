@@ -5,6 +5,7 @@ var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var multer = require('multer');
 var partials = require('express-partials');
+var compression = require('compression')
 var settings = require('./settings');
 
 
@@ -14,6 +15,7 @@ module.exports = function(app){
 	app.engine('.html', require('ejs').__express);
 	app.set('views',path.join(settings.path, 'app/views'));
 	app.set('view engine', 'html');
+	app.use(compression())
 	app.use(partials());
 	
 	app.use(bodyParser.json()); // for parsing application/json

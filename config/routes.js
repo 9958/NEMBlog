@@ -45,4 +45,6 @@ module.exports = function(app){
   app.get('/admin/comment', controllers.admin.auth_admin, controllers.admin.commentIndex);
   app.get('/admin/comment/delete/:id', controllers.admin.auth_admin, controllers.admin.commentDelete);
 
+  app.get('/admin/import_post', controllers.admin.auth_admin, controllers.data.post);
+
 }

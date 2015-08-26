@@ -3,6 +3,7 @@
 module.exports = function(sequelize, DataTypes) {
   var Page = sequelize.define("page", {
     //id:{type: DataTypes.INTEGER, autoIncrement: true},
+    org_id: DataTypes.STRING,
     title: DataTypes.STRING,
     slug: DataTypes.STRING,
     keywords: DataTypes.STRING,
