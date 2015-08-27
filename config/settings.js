@@ -25,6 +25,11 @@ var settings = {
         ssl:false,     //默认不适用SSL，可以省略不写
         user: 'rin9958@163.com',   //邮箱用户名
         pass:'a123456'   //输入邮箱密码
+	},
+
+	akismet_options: {
+	  apikey: 'myakismetapikey123', // akismet api key，不启用 akismet 请设置为空
+	  blog: 'http://localhost:3000' // required: your root level url
 	}
 }
 

@@ -14,7 +14,7 @@
     <%posts.forEach(function(item){%>
     <article class="post">
       <h2 class="title">
-          <a href="<%=site_url%>/post/<%=item.slug%>" title="<%=item.title%>"><%=item.title%></a>
+          <a href="<%=site_url%>/post/<% if(item.slug){%><%=item.slug%><%}else{%><%=item.id%><%}%>" title="<%=item.title%>"><%=item.title%></a>
       </h2>
 
       <div class="meta">

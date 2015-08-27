@@ -79,7 +79,7 @@
             <%}else{%>
             <a href="<%=comments[i].url%>" class="reviewer" url='external nofollow'><%=comments[i].author%></a>
             <%}%>
-            <time datetime='<%=comments[i].created%>'><%=comments[i].created.substring(0,10)%></time>
+            <time datetime='<%if(comments[i].created){%><%=comments[i].created%><%}else{%><%=comments[i].createdAt%><%}%>'><%if(comments[i].created){%><%=comments[i].created%><%}else{%><%=comments[i].createdAt%><%}%></time>
             <div class="floor"><%=i+1%></div>
           </div>
           <div id="commentbody-53684" class='description' itemprop='description'><%- comments[i].content%></div>
@@ -111,7 +111,7 @@
           </div>
           <div class="row">
             <input id="comment-submit" name='submit' type='submit' tabindex='5' value='Post Comment' class="button">
-            <input type="hidden" name='id' value='<%=post._id%>'>
+            <input type="hidden" name='id' value='<%=post.id%>'>
             <input type="hidden" name='slug' value='<%=post.slug%>'>
             <input type="text" name="author" value="" id="no_author" />
           </div>

@@ -12,7 +12,7 @@ module.exports = function(app){
   app.get(/^\/p\/(\d+)$/, controllers.home.index);
   app.get('/archives', controllers.home.archives);
   app.get('/page/:slug', controllers.home.page);
-  app.get('/comment', controllers.home.comment);
+  app.post('/comment', controllers.home.comment);
   app.get('/tag/:tag', controllers.home.tag);
 
   /*
@@ -46,5 +46,7 @@ module.exports = function(app){
   app.get('/admin/comment/delete/:id', controllers.admin.auth_admin, controllers.admin.commentDelete);
 
   app.get('/admin/import_post', controllers.admin.auth_admin, controllers.data.post);
+  app.get('/admin/import_comment', controllers.admin.auth_admin, controllers.data.comment);
+
 
 }

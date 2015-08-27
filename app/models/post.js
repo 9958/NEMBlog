@@ -12,7 +12,8 @@ module.exports = function(sequelize, DataTypes) {
     status: DataTypes.INTEGER,
     clicknum: DataTypes.INTEGER,
     content_html: DataTypes.TEXT,
-    content: DataTypes.TEXT
+    content: DataTypes.TEXT,
+    created: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
   });
 
   return Post;

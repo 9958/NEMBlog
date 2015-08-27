@@ -3,7 +3,6 @@
 module.exports = function(sequelize, DataTypes) {
   var Comment = sequelize.define("comment", {
     //id:{type: DataTypes.INTEGER, autoIncrement: true},
-    post_org_id: DataTypes.STRING,
     post_slug: DataTypes.STRING,
     author: DataTypes.STRING,
     email: DataTypes.STRING,
@@ -11,8 +10,9 @@ module.exports = function(sequelize, DataTypes) {
     ip: DataTypes.STRING,
     status: DataTypes.INTEGER,
     content: DataTypes.STRING,
-    post_id: DataTypes.STRING,
-    avatar: DataTypes.STRING
+    post_id: DataTypes.INTEGER,
+    avatar: DataTypes.STRING,
+    created: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
   });
 
   return Comment;

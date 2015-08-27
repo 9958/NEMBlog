@@ -2,6 +2,7 @@ var _       = require('lodash');
 var marked = require('marked');
 var gravatar = require('gravatar');
 var settings = require('../../config/settings');
+var akismet = require('akismet').client({blog: settings.akismet_options.blog, apiKey: settings.akismet_options.apikey});
 var util = require('../lib/util');
 var models  = require('../models');
 
@@ -30,6 +31,7 @@ module.exports = {
 
 			models.post.findAndCountAll({
 				offset: start,
+				order:'id desc',
 				limit: settings.postNum
 			}).then(function(resultArr){
 				var result = resultArr.rows;
@@ -55,7 +57,7 @@ module.exports = {
 						crtP: currentPage,
 						maxP: maxPage,
 						nextP: nextPage,
-						hotpost: [],
+						hotpost: hot_post,
 						user: {}
 					};
 
@@ -70,8 +72,15 @@ module.exports = {
 	},
 	post: function(req, res, next){
 		var id = req.params.id;
+		var idInt = parseInt(id);
+		var where = {};
+		if(idInt > 0){
+			where.id = idInt;
+		}else{
+			where.slug = id;
+		}
 		models.post.findOne({
-			where:{$or:[{id: id}, {slug: id}]}
+			where:where
 		}).then(function(post){
 			if(post == null){
 				next();
@@ -84,7 +93,7 @@ module.exports = {
 			}else{
 				post.clicknum = 1;
 			}
-			models.post.update({clicknum: post.clicknum},{where:{id: id}});
+			models.post.update({clicknum: post.clicknum},{where:where});
 
 			var page_title = post.title + ' | ' + settings.name;
 			var keywords = settings.keywords;
@@ -97,14 +106,20 @@ module.exports = {
 				description = post.description;
 			}
 
+			var commentWhereOr = [];
+			commentWhereOr.push({post_id: post.id.toString()});
+			if(post.slug){
+				commentWhereOr.push({post_slug: post.slug});
+			}
 			//get all comments
 			models.comment.findAll({
-				where:{$or:[{post_org_id: post.org_id}, {post_id: post.id}]}
+				where:{$or:commentWhereOr}
 			}).then(function(comments){
 				for(var i = 0; i< comments.length; i++){
 					if(!comments[i].avatar){
-						comments[i].avatar = gravatar.url(comments[i].email, {s: '36', r: 'pg', d: 'mm'});
-						models.post.update({avatar: post.avatar},{where:{id: comments[i].id}});
+						comments[i].avatar = gravatar.url(comments[i].email, {s: '36', r: 'pg', d: 'mm'}, true);
+						console.dir(comments[i].avatar);
+						models.comment.update({avatar: comments[i].avatar},{where:{id: comments[i].id}});
 					}
 				}
 
@@ -116,20 +131,21 @@ module.exports = {
 					post: post,
 					comments: comments, 
 					name: settings.name,
-					user:user,
+					user:{},
 					re_result:[]
 				}
 				if(post.tags){
-					var tags = post.tags.split(',');
-					var likeStr = '';
-					for(var i = 0; i<tags.length; i++){
+					post.tags = post.tags.split(',');
+					var likeStr = "";
+					for(var i = 0; i<post.tags.length; i++){
 						if(likeStr != ''){
-							likeStr += ',';
+							likeStr += ",";
 						}else{
-							likeStr += '{tags:{$like:%' + tags[i] +'%}}';
+							likeStr += "{tags:{$like:'%" + post.tags[i] +"%'}}";
 						}
 					}
-					likeStr = '[' + likeStr + ']';
+					likeStr = "[" + likeStr + "]";
+					//console.dir(likeStr);
 					models.post.findAll({
 						where:{
 							$or:eval(likeStr)
@@ -226,10 +242,10 @@ module.exports = {
 		var slug = req.body.slug;
 		//hidden input，if value should be dirty robot
   		var no_author = req.body.author;
-  		if (id == "" || slug == "" || !req.headers['referer'] || req.headers['referer'].indexOf(slug) <= 0) {
+  		if ((id == "" && slug == "") || !req.headers['referer'] || (req.headers['referer'].indexOf(slug) <= 0 && req.headers['referer'].indexOf(id) <= 0 )) {
 	  	  	return res.redirect("/fuck-spam-comment");
 	 	} else if (no_author !== "") {
-	 	   	console.log("no_author not is empty");
+	 	   	//console.log("no_author not is empty");
 	   		 return res.redirect("/fuck-spam-comment");
 		} else {
 			var comment = {
@@ -240,7 +256,6 @@ module.exports = {
 	          url: req.body.u_rl,
 	          content: req.body.c_ontent,
 	          ip: req.ip,
-	          created: dateFormat(new Date(), "isoDateTime"),
 	          status: "1"//状态： 1：正常，0：SPAM
 	        };
 
@@ -256,12 +271,25 @@ module.exports = {
 	            delete comment.url;
 	          }
 	        }
-	        comment.avatar = gravatar.url(comment.email, {s: '36', r: 'pg', d: 'mm'});
+	        comment.avatar = gravatar.url(comment.email, {s: '36', r: 'pg', d: 'mm'},true);
 
 	        models.comment.create(comment).then(function(result){
-	            res.redirect('/post/' + id);
+	        	//配置了 akismet key 而且不为空时，进行 akismet spam检查
+	            if (settings.akismet_options && settings.akismet_options.apikey != "") {
+	            	console.dir(comment);
+	            	 akismet.checkSpam(comment, function (err, spam) {
+	            	 	console.dir(33);
+		                //发现SPAM
+		                if (spam) {
+		                  //console.log('Spam caught.');
+		                  models.comment.update({status: 0},{where:{id:result.id}});
+		                }
+		             });
+	            }
+	            
 	        });
 
+	        res.redirect('/post/' + id);
 	 	}
 
 	},
