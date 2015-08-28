@@ -1,6 +1,7 @@
 var _       = require('lodash');
 var marked = require('marked');
 var gravatar = require('gravatar');
+var moment = require('moment');
 var settings = require('../../config/settings');
 var akismet = require('akismet').client({blog: settings.akismet_options.blog, apiKey: settings.akismet_options.apikey});
 var util = require('../lib/util');
@@ -37,6 +38,8 @@ module.exports = {
 				var result = resultArr.rows;
 				for(var i = 0; i<result.length; i++){
 					result[i].content = marked(result[i].content);
+					var time = result[i].created || result[i].createdAt;
+					result[i].addtime = moment(new Date(time)).format("YYYY-MM-DD");
 					if(result[i].content.indexOf('<!--more-->') > 0){
 						result[i].content = result[i].content.substring(0, result[i].content.indexOf('<!--more-->')) + '<div class="ReadMore"><a href="/post/' + result[i].id + '">[阅读更多]</a></div>';
 					}
@@ -169,7 +172,8 @@ module.exports = {
 		};
 
 		models.post.count().then(function(count){
-			var pagesize = settings.postNum * 5;
+			
+			var pagesize =req.query.size || (settings.postNum * 5);
 			var maxPage = parseInt(count / pagesize) + (count % pagesize ? 1:0);
 			var currentPage = isNaN(parseInt(req.params[0])) ? 1 : parseInt(req.params[0]);
 			if(currentPage == 0) currentPage = 1;
@@ -194,15 +198,19 @@ module.exports = {
 				offset: start,
 				limit: pagesize,
 				order:'id desc'
-			}).then(function(archives){
+			}).then(function(resultArr){
+				var archives = resultArr.rows;
 				for(var i = 0; i<archives.length; i++){
-					var year = new Date(archives[i].createAt).getFullYear();
+
+					var time = archives[i].created || archives[i].createdAt;
+					var year = new Date(time).getFullYear();
 					if(archives[i].clicknum === undefined){
 						archives[i].clicknum = 0;
 					}
 					if(archiveList[year] === undefined){
 						archiveList[year] = {year: year, archives: []};
 					}
+					archives[i].addtime = moment(new Date(time)).format("YYYY-MM-DD");
 
 					archiveList[year].archives.push(archives[i]);
 				}
@@ -214,6 +222,9 @@ module.exports = {
 					name: settings.name,
 					keywords: settings.keywords,
 					description: settings.description,
+					crtP: currentPage,
+					maxP: maxPage,
+					nextP: nextPage,
 					user: {}
 				};
 				res.render('theme/' + settings.theme + '/archives', dataObj);

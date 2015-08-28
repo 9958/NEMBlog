@@ -11,6 +11,7 @@ module.exports = function(app){
   app.get('/post/:id', controllers.home.post);
   app.get(/^\/p\/(\d+)$/, controllers.home.index);
   app.get('/archives', controllers.home.archives);
+  app.get(/^\/archives\/(\d+)$/, controllers.home.archives);
   app.get('/page/:slug', controllers.home.page);
   app.post('/comment', controllers.home.comment);
   app.get('/tag/:tag', controllers.home.tag);
