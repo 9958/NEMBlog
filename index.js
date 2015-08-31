@@ -1,7 +1,7 @@
 var path = require('path');
 var express = require('express');
 var colors = require('colors')
-var debug = require('debug')('NEMBlog');
+//var debug = require('debug')('NEMBlog');
 var settings = require('./config/settings');
 var environment = require('./config/environment');
 var routes = require('./config/routes');
@@ -14,7 +14,7 @@ routes(app);
 
 models.sequelize.sync().then(function(){
 	var server = app.listen(app.get('port'),function(){
-		debug('listening on port ' + server.address().port);
+		console.log('listening on port ' + server.address().port);
 	});
 });
 
