@@ -50,21 +50,36 @@ module.exports = {
 					limit:12,
 					order: 'clicknum desc'
 				}).then(function(hot_post){
-					var index_obj = {
-						site_url: settings.site_url,
-						name: settings.name,
-						title: title,
-						keywords: settings.keywords,
-						description: settings.description,
-						posts: result,
-						crtP: currentPage,
-						maxP: maxPage,
-						nextP: nextPage,
-						hotpost: hot_post,
-						user: {}
-					};
 
-					res.render('theme/' + settings.theme + '/index',index_obj);
+					models.comment.findAll({
+						limit:10,
+						order: 'id desc'
+					}).then(function(comments){
+						for(var i = 0; i < comments.length; i++){
+							var time = comments[i].created || comments[i].createdAt;
+							comments[i].addtime = moment(new Date(time)).format("YYYY-MM-DD");
+							comments[i].gourl = comments[i].post_slug || comments[i].post_id ;
+						}
+
+						var index_obj = {
+							site_url: settings.site_url,
+							name: settings.name,
+							title: title,
+							keywords: settings.keywords,
+							description: settings.description,
+							posts: result,
+							crtP: currentPage,
+							maxP: maxPage,
+							nextP: nextPage,
+							hotpost: hot_post,
+							comments: comments,
+							user: {}
+						};
+
+						res.render('theme/' + settings.theme + '/index',index_obj);
+					});
+
+					
 
 				});
 				
@@ -89,6 +104,8 @@ module.exports = {
 				next();
 			}
 
+			var time = post.created || post.createdAt;
+			post.addtime = moment(new Date(time)).format("YYYY-MM-DD");
 			post.content = marked(post.content);
 			//clicknum
 			if(post.clicknum !=undefined){
@@ -121,9 +138,10 @@ module.exports = {
 				for(var i = 0; i< comments.length; i++){
 					if(!comments[i].avatar){
 						comments[i].avatar = gravatar.url(comments[i].email, {s: '36', r: 'pg', d: 'mm'}, true);
-						console.dir(comments[i].avatar);
 						models.comment.update({avatar: comments[i].avatar},{where:{id: comments[i].id}});
 					}
+					var time = comments[i].created || comments[i].createdAt;
+					comments[i].addtime = moment(new Date(time)).format("YYYY-MM-DD");
 				}
 
 				var dataObj = {
@@ -171,7 +189,16 @@ module.exports = {
 			return a.year < b.year
 		};
 
-		models.post.count().then(function(count){
+		var keyword = req.query.keyword;
+		var searchWhere = {};
+		if(keyword && keyword != ''){
+			var OrWhere = [];
+			OrWhere.push({title:{$like: '%'+keyword+'%'}});
+			OrWhere.push({tags:{$like: '%'+keyword+'%'}});
+			searchWhere = {$or: OrWhere};
+		}
+
+		models.post.count({where:searchWhere}).then(function(count){
 			
 			var pagesize =req.query.size || (settings.postNum * 5);
 			var maxPage = parseInt(count / pagesize) + (count % pagesize ? 1:0);
@@ -195,6 +222,7 @@ module.exports = {
 
 			var archiveList = [];
 			models.post.findAndCountAll({
+				where:searchWhere,
 				offset: start,
 				limit: pagesize,
 				order:'id desc'

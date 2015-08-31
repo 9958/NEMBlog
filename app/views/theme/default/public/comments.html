@@ -1,0 +1,32 @@
+<div class="block">
+    <div class="widget about">
+      <strong class="wt">最新评论</strong>
+      <div class="wc">
+          <%if(comments.length>0){%>
+          <div id="comments">
+            <ol class="commentlist">
+              <%for(var i=0;i < comments.length ;i++){%>
+              <li id='comment-<%=comments[i].id%>' class='comment clearfix' style="padding:10px 0;">
+                <img src="<%=comments[i].avatar%>" width='36' height='36' class='avatar' alt="">
+
+                <div class="content">
+                  <div class="info">
+                    <%if(typeof comments[i].url == "undefined"){%>
+                    <span class="reviewer"><%=comments[i].author%></span>
+                    <%}else{%>
+                    <a href="<%=comments[i].url%>" class="reviewer" url='external nofollow'><%=comments[i].author%></a>
+                    <%}%>
+                    <time datetime='<%if(comments[i].created){%><%=comments[i].created%><%}else{%><%=comments[i].createdAt%><%}%>'><%=comments[i].addtime%></time>
+                    <div class="floor"><%=i+1%></div>
+                  </div>
+                  <div id="commentbody-53684" class='description' itemprop='description'><a target="_blank" href="<%=site_url%>/post/<%=comments[i].gourl%>"><%- comments[i].content%></a></div>
+                </div>
+              </li>
+              <%}%>
+            </ol>
+          </div>
+          <%}%>
+        <div class="sep10"></div>
+      </div>
+    </div>
+  </div>

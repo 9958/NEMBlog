@@ -30,7 +30,7 @@
       <%}%>
 </div>
     <div class="meta">
-      <time><%=post.created%></time>
+      <time><%=post.addtime%></time>
     </div>
     <div class="tags">
       <%if(post.tags && post.tags.length > 0){%>
@@ -79,7 +79,7 @@
             <%}else{%>
             <a href="<%=comments[i].url%>" class="reviewer" url='external nofollow'><%=comments[i].author%></a>
             <%}%>
-            <time datetime='<%if(comments[i].created){%><%=comments[i].created%><%}else{%><%=comments[i].createdAt%><%}%>'><%if(comments[i].created){%><%=comments[i].created%><%}else{%><%=comments[i].createdAt%><%}%></time>
+            <time datetime='<%if(comments[i].created){%><%=comments[i].created%><%}else{%><%=comments[i].createdAt%><%}%>'><%=comments[i].addtime%></time>
             <div class="floor"><%=i+1%></div>
           </div>
           <div id="commentbody-53684" class='description' itemprop='description'><%- comments[i].content%></div>
