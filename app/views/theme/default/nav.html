@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>前端后端导航-前端后端技术导航-前端后端网址导航-rin部落导航-前端后端博客</title>
+    <link rel="stylesheet" href="<%=site_url%>/theme/assets/style.css">
+    <link rel="stylesheet" href="<%=site_url%>/theme/assets/nav.css">
+    <meta name="keywords" content="rin部落前端后端博客,rin部落导航,前端后端导航,前端后端网址导航">
+    <meta name="description" content="rin部落前端后端博客-前端后端技术资源导航，前端后端网址导航，总结前端后端工程师常用的网站，作为前端后端工程师资料库之一，rin部落博客之前端后端导航。">
+    <script src="<%=site_url%>/libs/jquery.min.js"></script>
+    <script type="text/javascript">
+            $(document).ready(function () {
+                $(".navs_clicks a").click(function () {
+                    var href = $(this).attr("href");
+                    var top = $(href).offset().top;
+                    $(this).blur();
+                    $("body,html").animate({scrollTop: top}, 500);
+                    return false;
+                })
+
+                if ($(window).height() < parseInt($(".navs_clicks").height()) + 60) {
+
+                    $("#main-footer").hide();
+
+                }
+
+               
+                $(window).resize(function () {
+                    if ($(window).height() < parseInt($(".navs_clicks").height()) + 60) {
+
+                        $("#main-footer").hide();
+
+                    }
+                });
+
+                $("#navs nav ul.navs_clicks > li").each(function(){
+                    $(this).hover(function(){
+                        $(this).find('.sub').show();
+                    },function(){
+                        $(this).find('.sub').hide();
+                    });
+                    
+                });
+            })
+        </script></head>
+<body class="page page-id-5013 page-template page-template-pagesnav-php">
+    <section class="container" id="navs">
+        <nav>
+            <ul class="affix-top navs_clicks">
+                <li class="item-0 goback">
+                    <a href="/">&nbsp;&nbsp;</a>
+                </li>
+                <%cat_list.forEach(function(item){%>
+                <li class="item-<%=item.id%>">
+                    <a href="#<%=item.id%>"><%=item.name%></a>
+                    <%if(item.child){ %>
+                    <ul class="sub hide">
+                    <%item.child.forEach(function(sitem){%>
+                        <li class="sub-item"><a href="#<%=sitem.id%>"><%=sitem.name%></a></li>
+                    <%})%>
+                    </ul>
+                    <%}%>
+                </li>
+                <%})%>
+            </ul>
+        </nav>
+        <div class="items">
+            <%cat_list.forEach(function(item){%>
+            <div class="item item-<%=item.id%>" id="<%=item.id%>">
+                <h2><%=item.name%></h2>
+                <%if(item.list){ %>
+                <ul class="xoxo blogroll">
+                    <%item.list.forEach(function(listitem){%>
+                    <li>
+                        <a href="<%=listitem.url%>" title="<%=listitem.content%>" target="_blank"><%=listitem.title%></a>
+                        <br><%=listitem.content%></li>
+                    <%})%>  
+                </ul>
+                <%}%>
+                <%if(item.child){ %>
+                    <%item.child.forEach(function(sitem){%>
+                    <h2 id="<%=sitem.id%>"><%=item.name%><span> · <%=sitem.name%></span></h2>
+                        <%if(sitem.list){ %>
+                        <ul class="xoxo blogroll">
+                            <%sitem.list.forEach(function(listsitem){%>
+                            <li>
+                                <a href="<%=listsitem.url%>" title="<%=listsitem.content%>" target="_blank"><%=listsitem.title%></a>
+                                <br><%=listsitem.content%></li>
+                            <%})%>  
+                        </ul>
+                        <%}%>
+                    <%})%>
+                <%}%>
+            </div>
+            <%})%>
+           
+        </div>
+    </section>
+
+       <footer id="main-footer" style="display:none;">
+    <div class="container">
+      <p>Lovingly made by willerce, Powered by <a href="https://github.com/willerce/noderce">Noderce</a> 
+          | <a href="<%=site_url%>/sitemap.html" target="_blank" title="网站地图">网站地图</a> | <a href="<%=site_url%>/sitemap.xml" target="_blank" title="sitemap">sitemap</a> <a href="http://www.miitbeian.gov.cn/" target="_blank">沪ICP备14000208号</a>
+      </p>
+      <p>Thanks WebStorm, Nodejs and Express <script src="http://s11.cnzz.com/stat.php?id=5320846&web_id=5320846" language="JavaScript"></script></p>
+    </div>
+    </footer>
+<script type="text/javascript">
+$(document).ready(function(){
+$(window).scroll(function(){
+if($(this).scrollTop()>100){
+$('.top').fadeIn();}
+else{
+$('.top').fadeOut();} });
+$('.top').click(function(){
+$('body,html').animate({scrollTop:0},800);});
+});
+
+</script>
+<style>
+.top {position: fixed;display: none;width: 55px;height: 55px;right: 50px;bottom: 50px;
+background: #D6D6D6;color: #fff;font-size: 36px;line-height: 55px;text-align: center;
+cursor: pointer;border-radius: 40px;transition-property: background;transition-duration: 0.5s;
+-webkit-transition-property: background;-webkit-transition-duration: 0.5s;-moz-transition-property: background;
+-moz-transition-duration: 0.5s;
+}
+</style>
+<div class="top">↑
+</div>
+
+</body>
+</html>

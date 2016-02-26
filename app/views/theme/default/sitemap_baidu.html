@@ -1,0 +1,62 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+     
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>站点地图 - rin博客</title>
+
+<meta name="keywords" content="站点地图,rin博客">
+<meta name="keywords" content="php个人博客,关于我,梦想清单,文章归档,机器人,友情链接,ejs ,nodejs ,express ,rss ,json ,nginx ,capp ,验证码 ,appfog ,mongodb ,js ,jquery ,ecshop,www.9958.pw">
+<meta name="description" content="php技术博客，php个人博客,php博客,www.9958.pw,专注于php编程，总结技术难点心得，记录个人php技术发展历程，分享优质php代码，交流php心得体会，推动php的发展！">
+<meta name="generator" content="Baidu SiteMap Generator">
+<meta name="author" content="www.9958.pw">
+<meta name="copyright" content="www.9958.pw">
+<style type="text/css">
+	body {font-family: Verdana;FONT-SIZE: 12px;MARGIN: 0;color: #000000;background: #ffffff;}
+	img {border:0;}
+	li {margin-top: 8px;}
+	.page {padding: 4px; border-top: 1px #EEEEEE solid}
+	.author {background-color:#EEEEFF; padding: 6px; border-top: 1px #ddddee solid}
+	#nav, #content, #footer {padding: 8px; border: 1px solid #EEEEEE; clear: both; width: 95%; margin: auto; margin-top: 10px;}
+</style>
+</head>
+<body vlink="#333333" link="#333333">
+<h2 style="text-align: center; margin-top: 20px">rin博客's SiteMap </h2>
+<center></center>
+<div id="nav"><a href="<%=site_url%>"><strong>rin博客</strong></a>  » <a href="<%=site_url%>/sitemap.html">站点地图</a></div>
+<div id="content">
+<h3>最新文章</h3>
+<ul>
+    <%archives.forEach(function(year){%>
+    <%year.archives.forEach(function(item){%>
+<li>
+    <a href="<%=site_url%>/post/<%=item.slug%>" title="<%=item.title%>" target="_blank"><%=item.title%></a>
+</li>
+    <%})%>
+    <%})%>
+</ul>
+</div>
+
+<div id="content">
+<li class="pagenav">页面
+    <ul>
+        <li class="page_item page-item-2"><a href="<%=site_url%>/page/about" title="关于我">关于我</a></li>
+        <li class="page_item page-item-1236"><a href="<%=site_url%>/page/dream-list" title="梦想清单">梦想清单</a></li>
+        <li class="page_item page-item-1236"><a href="http://tool.9958.pw/" title="在线工具">在线工具</a></li>
+        <li class="page_item page-item-1236"><a href="<%=site_url%>/nav" title="网址导航">网址导航</a></li>
+        <li class="page_item page-item-1140"><a href="<%=site_url%>/archives" title="文章存档">文章存档</a></li>
+    </ul>
+</li>
+</div>
+
+<div id="footer">查看博客首页: <strong><a href="<%=site_url%>" title="rin博客">rin博客</a></strong></div><br>
+<center>
+<div style="text-algin: center; font-size: 11px"><strong><a href="<%=site_url%>/sitemap.xml" target="_blank">Baidu-SiteMap</a></strong> &nbsp;
+Latest Update: <%=now_date%><br><br></div>
+</center>
+<center>
+<div style="text-algin: center; font-size: 11px">Powered by <strong><a href="<%=site_url%>/" target="_blank">Baidu SiteMap Generator</a></strong> &nbsp;
+© 2008-2013 <a href="<%=site_url%>/" target="_blank" title="rin博客">rin博客</a><br>
+</center>
+
+</body></html>

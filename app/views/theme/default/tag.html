@@ -4,7 +4,7 @@
     <%posts.forEach(function(item){%>
     <article>
       <h2>
-        <time><%=item.created%></time>
+		<time datetime="<%=item.addtime%>"><%=item.addtime%></time>
         <a href="<%=site_url%>/post/<%=item.slug%>" title="<%=item.title%>"><%=item.title%></a>
       </h2>
     </article>

@@ -704,3 +704,11 @@ li.L9 {
 .post .entry p.relative_article{ line-height: 22px; margin-bottom: 10px;}
 .relative_article_title{ font-size: 14px;}
 .post .entry a.relative_article_title{font-size: 14px;}
+.sidebar .wc li{ line-height: 26px;}
+.sidebar .wc li a {
+    width: 280px;
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

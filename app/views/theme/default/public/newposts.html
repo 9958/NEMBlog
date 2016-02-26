@@ -1,0 +1,15 @@
+<%if(newposts && newposts.length > 0){%>
+<div class="block">
+    <div class="widget about">
+      <strong class="wt">最新文章</strong>
+      <div class="wc">
+          <ul>
+              <%newposts.forEach(function(item){%>
+              <li><a href="<%=site_url%>/post/<%=item.slug%>" title="<%=item.title%>"><%=item.title%></a></li>
+              <%})%>
+          </ul>
+        <div class="sep10"></div>
+      </div>
+    </div>
+  </div>
+  <%}%>

@@ -1,0 +1,21 @@
+<div class="block">
+    <div class="widget about">
+      <strong class="wt">文章标签</strong>
+      <div class="wc">
+         <div class="tags">
+        <%if(post.tags && post.tags.length > 0){%>
+        <p>
+          <%
+          for(var i=0;i < post.tags.length;i++) {
+          if(i+1 < post.tags.length){%>
+          <a href="<%=site_url%>/tag/<%=post.tags[i]%>" title="<%=post.tags[i]%>"><%=post.tags[i]%></a>，
+          <%}else{%>
+          <a href="<%=site_url%>/tag/<%=post.tags[i]%>" title="<%=post.tags[i]%>"><%=post.tags[i]%></a>
+          <%}}%>
+        </p>
+        <%}%>
+      </div>
+        <div class="sep10"></div>
+      </div>
+    </div>
+  </div>

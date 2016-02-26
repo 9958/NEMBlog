@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <title>Noderce 管理中心</title>
+    <link rel="stylesheet" href="/admin/assets/style.css">
+    <script src="/libs/jquery.min.js"></script>
+    <style>
+      #navcat-list li{ position: relative;}
+      #navcat-list li .info{ position: absolute;  bottom: 0; right: 10px;}
+    </style>
+  </head>
+  <body>
+    <div id="wrapper">
+      <div id="nav">
+        <ul>
+          <li><a href="/admin">Home</a><span> ›</span></li>
+          <li><a href="/admin/comment">Comments</a>
+        </ul>
+        <div class="quick"><a href="/admin/post/write" title="Write Post"><span>Write</span></a></div>
+      </div>
+      <div id="navcat">
+        <div class="navcat_form">
+          名称:<input type="text" placeholder="名称" id="name" name="name" value=""/> <br>
+          parentid:<input type="text" placeholder="parentid" id="parentid" name="parentid" value="0"/><br>
+          id:<input type="text" id="id" name="id" value="" readonly="readonly" /><br>
+          <input type="button" onclick="save()" value="确定" />
+        </div>
+        
+      <div id='navcat-list'>
+      	<ul>
+      		<% cat_list.forEach(function(item){ %>
+      		<li>
+            <input type="checkbox" data-id="<%=item.id%>" />
+      			<a><%= item.name %></a>
+      			<span class="info">
+              <span class="parentid">parentid:<%= item.parentid %></span>
+              <span>id:<%= item.id %></span>
+              <a class='action delete' href='/admin/nav_cat/delete/<%=item.id%>'>Delete</a>
+              <a class='action spam' href='javascript:' onclick="edit('<%= item.id %>','<%= item.name %>','<%= item.parentid %>')">修改</a>   
+              <span>Status:<%= item.status %></span>
+              <time><%= item.created %></time>
+            </span>
+              
+      		<% }); %>
+      	</ul>
+      </div>
+      <div id='clearfix'></div>
+    </div>
+    <script type="text/javascript">
+      function save(){
+        var data = {
+          id: $('#id').val(),
+          name: $('#name').val(),
+          parentid: $('#parentid').val()
+        }
+        $.ajax({
+          'url':'/admin/nav_cat_save',
+          'type':'post',
+          'datatype':'json',
+          'data':data,
+          'error': function(err){
+
+          },
+          'success':function(msg){
+            if(msg.success){
+              window.location.href=window.location.href;
+            }
+          }
+        })
+      }
+      function edit(id,name,parentid){
+        $('#id').val(id);
+        $('#name').val(name);
+        $('#parentid').val(parentid);
+      
+      }
+      (function(){
+        
+      })();
+    </script>
+  </body>
+</html>

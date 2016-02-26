@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- baidu-sitemap-generator-url="<%=site_url%>/" baidu-sitemap-generator-version="1.43" -->
+<!-- generated-on="<%=now_date%>" -->
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>http://www.9958.pw</loc>
+        <lastmod><%=now_date%></lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+    <%archives.forEach(function(year){%>
+    <%year.archives.forEach(function(item){%>
+    <url>
+        <loc><%=site_url%>/post/<%=item.slug%></loc>
+        <lastmod><%=item.created%></lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <%})%>
+    <%})%>
+    <url>
+        <loc><%=site_url%>/page/about</loc>
+        <lastmod><%=now_date%></lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>http://tool.9958.pw/</loc>
+        <lastmod><%=now_date%></lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc><%=site_url%>/nav</loc>
+        <lastmod><%=now_date%></lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc><%=site_url%>/page/dream-list</loc>
+        <lastmod><%=now_date%></lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc><%=site_url%>/archives</loc>
+        <lastmod><%=now_date%></lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.6</priority>
+    </url>
+</urlset>

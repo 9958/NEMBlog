@@ -1,5 +1,5 @@
 module.exports = {
-	data : require('./import'),
+	//data : require('./import'),
 	home : require('./home'),
 	admin : require('./admin')
 };

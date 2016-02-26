@@ -16,6 +16,7 @@ module.exports = function(app){
   app.get('/page/:slug', controllers.home.page);
   app.post('/comment', controllers.home.comment);
   app.get('/tag/:tag', controllers.home.tag);
+  app.get('/nav', controllers.home.nav);
 
   /*
   * =================================================================================
@@ -47,8 +48,17 @@ module.exports = function(app){
   app.get('/admin/comment', controllers.admin.auth_admin, controllers.admin.commentIndex);
   app.get('/admin/comment/delete/:id', controllers.admin.auth_admin, controllers.admin.commentDelete);
 
-  app.get('/admin/import_post', controllers.admin.auth_admin, controllers.data.post);
-  app.get('/admin/import_comment', controllers.admin.auth_admin, controllers.data.comment);
+  app.get('/admin/nav_cat', controllers.admin.auth_admin, controllers.admin.navCat);
+  app.post('/admin/nav_cat_save', controllers.admin.auth_admin, controllers.admin.navCatSave);
+
+  app.get('/admin/nav_list', controllers.admin.auth_admin, controllers.admin.navList);
+  app.post('/admin/nav_list_save', controllers.admin.auth_admin, controllers.admin.navListSave);
+
+  app.get('/sitemap.html', controllers.home.siteMapBaidu);
+  app.get('/sitemap.xml', controllers.home.siteMapGoogle);
+
+  // app.get('/admin/import_post', controllers.admin.auth_admin, controllers.data.post);
+  // app.get('/admin/import_comment', controllers.admin.auth_admin, controllers.data.comment);
 
 
 }

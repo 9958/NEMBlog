@@ -97,6 +97,67 @@ module.exports = {
 
     
   },
+  /**
+   *============================================================================
+   * 导航 模块
+   *============================================================================
+   */
+  navCat: function(req, res){
+    models.nav_cat.findAll().then(function(results){
+        res.render('admin/nav_cat', {layout: false, cat_list: results});
+    });
+  },
+  navCatSave: function(req, res){
+    if(req.method == "POST"){
+      var nav_cat = _.pick(req.body, 'name','parentid');
+      nav_cat.status = 1;
+      if(req.body.id>0){
+        models.nav_cat.update(nav_cat,{where:{id: req.body.id}}).then(function(){
+            var data = {
+              success:true
+            }
+            res.send(data);
+        });
+      }else{
+        models.nav_cat.create(nav_cat).then(function(result){
+            var data = {
+              success:true,
+              result:result
+            }
+            res.send(data);
+        });
+      }
+      
+    }
+  },
+  navList: function(req, res){
+    models.nav_list.findAll().then(function(results){
+        res.render('admin/nav_list', {layout: false, nav_list: results});
+    });
+  },
+  navListSave: function(req, res){
+    if(req.method == "POST"){
+      var nav_list = _.pick(req.body, 'title','url','content','cat_id');
+      nav_list.status = 1;
+      if(req.body.id>0){
+        models.nav_list.update(nav_list,{where:{id: req.body.id}}).then(function(){
+            var data = {
+              success:true
+            }
+            res.send(data);
+        });
+      }else{
+        models.nav_list.create(nav_list).then(function(result){
+            var data = {
+              success:true,
+              result:result
+            }
+            res.send(data);
+        });
+      }
+      
+    }
+  },
   /*
   *===============================================================================
   * 评论 模块

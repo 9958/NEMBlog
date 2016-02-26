@@ -131,26 +131,17 @@ module.exports = {
 			if(post.slug){
 				commentWhereOr.push({post_slug: post.slug});
 			}
-			//get all comments
-			models.comment.findAll({
-				where:{$or:commentWhereOr}
-			}).then(function(comments){
-				for(var i = 0; i< comments.length; i++){
-					if(!comments[i].avatar){
-						comments[i].avatar = gravatar.url(comments[i].email, {s: '36', r: 'pg', d: 'mm'}, true);
-						models.comment.update({avatar: comments[i].avatar},{where:{id: comments[i].id}});
-					}
-					var time = comments[i].created || comments[i].createdAt;
-					comments[i].addtime = moment(new Date(time)).format("YYYY-MM-DD");
-				}
-
+			//get new post
+			models.sequelize.query('select title,created,createdAt,clicknum,slug from posts order by id desc limit 10',{
+		      	type: models.sequelize.QueryTypes.SELECT
+		    }).then(function(newposts){
 				var dataObj = {
 					site_url:settings.site_url,
 					title: page_title,
 					keywords: keywords,
 					description: description, 
 					post: post,
-					comments: comments, 
+					newposts: newposts, 
 					name: settings.name,
 					user:{},
 					re_result:[]
@@ -337,7 +328,9 @@ module.exports = {
 			where: {tags:{$like:'%'+req.params.tag+'%'}}
 		}).then(function(result){
 			for(var i = 0; i < result.length; i++){
-				result[i].content = marked(result[i].content)
+				result[i].content = '';
+				var time = result[i].created || result[i].createdAt;
+				result[i].addtime = moment(new Date(time)).format("YYYY-MM-DD");
 			}
 
 			var dataObj = {
@@ -352,5 +345,141 @@ module.exports = {
 
 			res.render('theme/' + settings.theme + '/tag', dataObj);
 		});
+	},
+	nav: function(req, res, next){
+		models.nav_cat.findAll({
+			where: {status:1}
+		}).then(function(cat_list){
+			var catList = cat_list;
+			models.nav_list.findAll({
+				where: {status:1}
+			}).then(function(list){
+				//将列表挂在分类下
+				var cat_list = mergeCatList(catList,list);
+				//处理分类层级关系
+				var cat_list = getTree(cat_list,0);
+				var dataObj = {
+					site_url:settings.site_url,
+					name: settings.name, 
+					title: settings.name,
+					keywords: settings.keywords,
+					description: settings.description, 
+					cat_list: cat_list,
+					layout: false
+				};
+				res.render('theme/' + settings.theme + '/nav', dataObj);
+			})
+		});
+	},
+	siteMapBaidu: function(req, res){
+		var sortNumber = function (a, b) {
+	        return a.year < b.year
+	      };
+	      
+	      models.sequelize.query('select title,created,createdAt,clicknum,slug from posts',{
+	      	type: models.sequelize.QueryTypes.SELECT
+	      }).then(function(archives){
+	      	var archiveList = [];
+
+	      	for(var i = 0; i<archives.length; i++){
+				var time = archives[i].created || archives[i].createdAt;
+				var year = new Date(time).getFullYear();
+				if(archives[i].clicknum === undefined){
+					archives[i].clicknum = 0;
+				}
+				if(archiveList[year] === undefined){
+					archiveList[year] = {year: year, archives: []};
+				}
+				archives[i].addtime = moment(new Date(time)).format("YYYY-MM-DD");
+
+				archiveList[year].archives.push(archives[i]);
+			}
+	        //archiveList = archiveList.sort(sortNumber);
+	 
+	        var now_date = new Date();
+	        var dataObj = {
+	        	site_url:settings.site_url,
+	        	title: settings.name + " › 站点地图", 
+	        	layout: false,
+	        	archives: archiveList, 
+	        	name: settings.name,
+	        	keywords: settings.keywords,
+	        	description: settings.description,
+	        	now_date:now_date
+	        }
+	        res.render('theme/' + settings.theme + '/sitemap_baidu.html', dataObj);
+	      });
+	},
+	siteMapGoogle: function(req, res){
+		var sortNumber = function (a, b) {
+	        return a.year < b.year
+	      };
+	      
+	      models.sequelize.query('select title,created,createdAt,clicknum,slug from posts',{
+	      	type: models.sequelize.QueryTypes.SELECT
+	      }).then(function(archives){
+	      	var archiveList = [];
+	      	for(var i = 0; i<archives.length; i++){
+				var time = archives[i].created || archives[i].createdAt;
+				var year = new Date(time).getFullYear();
+				if(archives[i].clicknum === undefined){
+					archives[i].clicknum = 0;
+				}
+				if(archiveList[year] === undefined){
+					archiveList[year] = {year: year, archives: []};
+				}
+				archives[i].addtime = moment(new Date(time)).format("YYYY-MM-DD");
+
+				archiveList[year].archives.push(archives[i]);
+			}
+	        //archiveList = archiveList.sort(sortNumber);
+	 
+	        var now_date = new Date();
+	        var dataObj = {
+	        	site_url:settings.site_url,
+	        	title: settings.name + " › 站点地图", 
+	        	layout: false,
+	        	archives: archiveList, 
+	        	name: settings.name,
+	        	keywords: settings.keywords,
+	        	description: settings.description,
+	        	now_date:now_date
+	        }
+	        res.setHeader('content-type', 'application/xml');
+	        res.render('theme/' + settings.theme + '/sitemap_google.html', dataObj);
+	      });
 	}
+}
+
+
+function getTree(data,pid){
+	var tree = [];
+	for(var i=0;i<data.length;i++){	
+		if(data[i].parentid == pid){
+			data[i].child = getTree(data,data[i].id);
+			tree.push(data[i]);
+		}
+	}
+	return tree;
+}
+
+function mergeCatList(cat_list,nav_list){
+	var navTemp = [];
+	var navCatTmp = [];
+	for(var i=0;i<nav_list.length;i++){	
+		if(navTemp[nav_list[i].cat_id]){
+			navTemp[nav_list[i].cat_id].push(nav_list[i]);
+		}else{
+			//navCatTmp.push(nav_list[i].cat_id);
+			navTemp[nav_list[i].cat_id] = [];
+			navTemp[nav_list[i].cat_id].push(nav_list[i]);
+		}
+	}
+
+	for(var i=0;i<cat_list.length;i++){	
+		if(navTemp[cat_list[i].id]){
+			cat_list[i].list = navTemp[cat_list[i].id];
+		}
+	}
+	return cat_list;
 }
