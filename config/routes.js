@@ -54,6 +54,10 @@ module.exports = function(app){
   app.get('/admin/nav_list', controllers.admin.auth_admin, controllers.admin.navList);
   app.post('/admin/nav_list_save', controllers.admin.auth_admin, controllers.admin.navListSave);
 
+  app.get('/admin/tags', controllers.admin.auth_admin, controllers.admin.tag);
+  app.post('/admin/tag_save', controllers.admin.auth_admin, controllers.admin.tagSave);
+  app.post('/admin/tag_query', controllers.admin.auth_admin, controllers.admin.tagQuery);
+
   app.get('/sitemap.html', controllers.home.siteMapBaidu);
   app.get('/sitemap.xml', controllers.home.siteMapGoogle);
 

@@ -158,6 +158,107 @@ module.exports = {
       
     }
   },
+   /**
+   *============================================================================
+   * 导航 模块
+   *============================================================================
+   */
+  tag: function(req, res){
+    models.tag.findAll({order:'count desc'}).then(function(results){
+        models.tag_log.findOne({order:'id desc'}).then(function(tagRes){
+            //纪录一次
+            res.render('admin/tag', {layout: false, tag_list: results,tag_log:tagRes});
+        });
+        
+    });
+  },
+  tagSave: function(req, res){
+    if(req.method == "POST"){
+      var tag = _.pick(req.body, 'title','count');
+      tag.status = 1;
+      if(req.body.id>0){
+        models.tag.update(tag,{where:{id: req.body.id}}).then(function(){
+            var data = {
+              success:true
+            }
+            res.send(data);
+        });
+      }else{
+        models.tag.create(tag).then(function(result){
+            var data = {
+              success:true,
+              result:result
+            }
+            res.send(data);
+        });
+      }
+      
+    }
+  },
+  tagQuery: function(req, res){
+    if(req.method == "POST"){
+      models.tag_log.findOne({
+        order:'id desc'
+      }).then(function(result){
+          var last_post_id = 0;
+          if(result){
+            last_post_id = result.last_post_id;
+          }else{
+            last_post_id = 0;
+          }
+         models.sequelize.query('select id,tags from posts where id >'+last_post_id+' order by id asc limit 1',{
+            type: models.sequelize.QueryTypes.SELECT
+          }).then(function(results){
+            results.forEach(function(item,index){
+              var lastPostId = item.id;
+      
+              //纪录最大的id
+              if(index==0){
+                models.tag_log.create({last_post_id:lastPostId}).then(function(res){
+                    //纪录一次
+                });
+              }
+              //纪录标签
+              var tagsStr = item.tags;
+              var tagsArr = tagsStr.split(',');
+       
+              tagsArr.forEach(function(tagsItem){
+                (function(e) {
+                    models.tag.findOne({
+                      where:{
+                        title:e
+                      }
+                    }).then(function(tagRes){
+                        var titleTmp = e;
+                        if(tagRes){
+                          models.tag.update({count:tagRes.count+1},{where:{id: tagRes.id}}).then(function(){
+                              //更新纪录
+                          });
+                        }else{
+                          models.tag.create({title:titleTmp,status:1,count:1}).then(function(res){
+                              //生成纪录
+                          });
+                        }
+                    });
+                })(tagsItem);
+              });
+        
+            
+            });
+            //返回成功
+            var data = {
+              success:true,
+              result:results[0]
+            }
+            res.send(data);
+            
+          });
+
+
+        });
+      
+    }
+  },
   /*
   *===============================================================================
   * 评论 模块

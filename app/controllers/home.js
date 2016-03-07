@@ -1,9 +1,8 @@
 var _       = require('lodash');
 var marked = require('marked');
-var gravatar = require('gravatar');
+//var gravatar = require('gravatar');
 var moment = require('moment');
 var settings = require('../../config/settings');
-var akismet = require('akismet').client({blog: settings.akismet_options.blog, apiKey: settings.akismet_options.apikey});
 var util = require('../lib/util');
 var models  = require('../models');
 
@@ -29,13 +28,10 @@ module.exports = {
 			}else if(maxPage > currentPage){
 				nextPage = parseInt(currentPage) + 1;
 			}
-
-			models.post.findAndCountAll({
-				offset: start,
-				order:'id desc',
-				limit: settings.postNum
-			}).then(function(resultArr){
-				var result = resultArr.rows;
+			models.sequelize.query('select title,content,created,createdAt,clicknum,slug from posts limit '+start+','+settings.postNum,{
+		      	type: models.sequelize.QueryTypes.SELECT
+		    }).then(function(resultArr){
+				var result = resultArr;
 				for(var i = 0; i<result.length; i++){
 					result[i].content = marked(result[i].content);
 					var time = result[i].created || result[i].createdAt;
@@ -50,16 +46,11 @@ module.exports = {
 					limit:12,
 					order: 'clicknum desc'
 				}).then(function(hot_post){
-
-					models.comment.findAll({
-						limit:10,
-						order: 'id desc'
-					}).then(function(comments){
-						for(var i = 0; i < comments.length; i++){
-							var time = comments[i].created || comments[i].createdAt;
-							comments[i].addtime = moment(new Date(time)).format("YYYY-MM-DD");
-							comments[i].gourl = comments[i].post_slug || comments[i].post_id ;
-						}
+					//tags 云
+					models.sequelize.query('select title from tags order by count desc limit 50',{
+			      		type: models.sequelize.QueryTypes.SELECT
+			        }).then(function(tags){
+						
 
 						var index_obj = {
 							site_url: settings.site_url,
@@ -72,7 +63,7 @@ module.exports = {
 							maxP: maxPage,
 							nextP: nextPage,
 							hotpost: hot_post,
-							comments: comments,
+							tags: tags,
 							user: {}
 						};
 
@@ -270,12 +261,10 @@ module.exports = {
 	comment: function(req, res, next){
 		var id = req.body.id;
 		var slug = req.body.slug;
-		//hidden input，if value should be dirty robot
   		var no_author = req.body.author;
   		if ((id == "" && slug == "") || !req.headers['referer'] || (req.headers['referer'].indexOf(slug) <= 0 && req.headers['referer'].indexOf(id) <= 0 )) {
 	  	  	return res.redirect("/fuck-spam-comment");
 	 	} else if (no_author !== "") {
-	 	   	//console.log("no_author not is empty");
 	   		 return res.redirect("/fuck-spam-comment");
 		} else {
 			var comment = {
@@ -301,21 +290,10 @@ module.exports = {
 	            delete comment.url;
 	          }
 	        }
-	        comment.avatar = gravatar.url(comment.email, {s: '36', r: 'pg', d: 'mm'},true);
+	        //comment.avatar = gravatar.url(comment.email, {s: '36', r: 'pg', d: 'mm'},true);
 
 	        models.comment.create(comment).then(function(result){
-	        	//配置了 akismet key 而且不为空时，进行 akismet spam检查
-	            if (settings.akismet_options && settings.akismet_options.apikey != "") {
-	            	console.dir(comment);
-	            	 akismet.checkSpam(comment, function (err, spam) {
-	            	 	console.dir(33);
-		                //发现SPAM
-		                if (spam) {
-		                  //console.log('Spam caught.');
-		                  models.comment.update({status: 0},{where:{id:result.id}});
-		                }
-		             });
-	            }
+	 
 	            
 	        });
 
@@ -394,7 +372,6 @@ module.exports = {
 
 				archiveList[year].archives.push(archives[i]);
 			}
-	        //archiveList = archiveList.sort(sortNumber);
 	 
 	        var now_date = new Date();
 	        var dataObj = {
@@ -432,7 +409,6 @@ module.exports = {
 
 				archiveList[year].archives.push(archives[i]);
 			}
-	        //archiveList = archiveList.sort(sortNumber);
 	 
 	        var now_date = new Date();
 	        var dataObj = {

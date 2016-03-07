@@ -1,14 +1,14 @@
 var radius = 120;
 var dtr = Math.PI/180;
-var d=250;
+var d=300;
 
 var mcList = [];
 var active = false;
 var lasta = 1;
 var lastb = 1;
 var distr = true;
-var tspeed=1;
-var size=250;
+var tspeed=5;
+var size=300;
 
 var mouseX=0;
 var mouseY=0;
@@ -17,6 +17,12 @@ var howElliptical=1;
 
 var aA=null;
 var oDiv=null;
+var sa = 0;
+var ca = 0;
+var sb = 0;
+var cb = 0;
+var sc = 0;
+var cc = 0;
 
 window.onload=function ()
 {
@@ -54,11 +60,15 @@ window.onload=function ()
 	oDiv.onmousemove=function (ev)
 	{
 		var oEvent=window.event || ev;
-		
-		mouseX=oEvent.clientX-(oDiv.offsetLeft+oDiv.offsetWidth/2);
+
+		var rect = oDiv.getBoundingClientRect(); 
+		var clientTop = document.documentElement.clientTop; 
+		var clientLeft = document.documentElement.clientLeft; 
+
+		mouseX=oEvent.clientX-(rect.left - clientLeft+oDiv.offsetWidth/2);
 	
-		mouseY=oEvent.clientY-oDiv.getBoundingClientRect().top-oDiv.offsetHeight/2;
-			
+		mouseY=oEvent.clientY-(rect.top - clientTop)-oDiv.offsetHeight/2;
+		
 		mouseX/=5;
 		mouseY/=5;
 	};

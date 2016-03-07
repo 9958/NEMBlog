@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <title>Noderce 管理中心</title>
+    <link rel="stylesheet" href="/admin/assets/style.css">
+    <script src="/libs/jquery.min.js"></script>
+    <style>
+      #navcat-list li{ position: relative;}
+      #navcat-list li .info{ position: absolute;  bottom: 0; right: 10px;}
+    </style>
+  </head>
+  <body>
+    <div id="wrapper">
+      <div id="nav">
+        <ul>
+          <li><a href="/admin">Home</a><span> ›</span></li>
+          <li><a href="/admin/comment">Comments</a>
+        </ul>
+        <div class="quick"><a href="/admin/post/write" title="Write Post"><span>Write</span></a></div>
+      </div>
+      <div id="navcat">
+        <div class="tag_query">
+        <h3>更新标签库</h3>
+         <input type="button" onclick="tagQuery()" value="确定更新" /> 
+         当前：<span id="tagUpdateId"><% if(tag_log&&tag_log.last_post_id){ %><%= tag_log.last_post_id %><% } %></span>
+        </div>
+        <br/>
+        <div class="navcat_form">
+          名称:<input type="text" placeholder="名称" id="title" name="title" value=""/> <br>
+          count:<input type="text" placeholder="count" id="count" name="count" value="0"/><br>
+          id:<input type="text" id="id" name="id" value="" readonly="readonly" /><br>
+          <input type="button" onclick="save()" value="确定" />
+        </div>
+        
+      <div id='navcat-list'>
+      	<ul>
+      		<% tag_list.forEach(function(item,index){ %>
+      		<li>
+            <%= index %> <input type="checkbox" data-id="<%=item.id%>" />
+      			<a><%= item.title %></a>
+      			<span class="info">
+              <span class="parentid">count:<%= item.count %></span>
+              <span>id:<%= item.id %></span>
+              <a class='action delete' href='/admin/tag/delete/<%=item.id%>'>Delete</a>
+              <a class='action spam' href='javascript:' onclick="edit('<%= item.id %>','<%= item.title %>','<%= item.count %>')">修改</a>   
+              <span>Status:<%= item.status %></span>
+              <time><%= item.created %></time>
+            </span>
+              
+      		<% }); %>
+      	</ul>
+      </div>
+      <div id='clearfix'></div>
+    </div>
+    <script type="text/javascript">
+      function save(){
+        var data = {
+          id: $('#id').val(),
+          name: $('#title').val(),
+          count: $('#count').val()
+        }
+        $.ajax({
+          'url':'/admin/tag_save',
+          'type':'post',
+          'datatype':'json',
+          'data':data,
+          'error': function(err){
+
+          },
+          'success':function(msg){
+            if(msg.success){
+              window.location.href=window.location.href;
+            }
+          }
+        })
+      }
+      function edit(id,title,count){
+        $('#id').val(id);
+        $('#title').val(title);
+        $('#count').val(count);
+      
+      }
+      function tagQuery(){
+        
+        $.ajax({
+          'url':'/admin/tag_query',
+          'type':'post',
+          'datatype':'json',
+          'data':{},
+          'error': function(err){
+
+          },
+          'success':function(msg){
+            if(msg.success){
+              $('#tagUpdateId').html(msg.result.id);
+            }
+          }
+        })
+      }
+    </script>
+  </body>
+</html>

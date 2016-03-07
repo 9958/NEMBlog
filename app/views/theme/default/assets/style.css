@@ -42,7 +42,7 @@ input.textfield, textarea {
     padding: 2px;
 }
 body {
-    background: #f6f6f1;
+    background: #e6e6e6;
     color: #111;
     font-weight: 400;
     font-size: 13px;
@@ -108,18 +108,20 @@ pre code {
     position: relative;
     overflow: hidden;
     margin: 0 auto;
-    width: 95%;
-    max-width: 1140px;
+    padding: 0 5px;
+    width: 820px;
 }
+@media (min-width:768px){.container{width:750px}}
+@media (min-width:992px){.container{width:970px}}
+@media (min-width:1200px){.container{width:1170px}}
 .block {
     position: relative;
     overflow: hidden;
-    background: #fff;
-    margin: 0 4px 26px 0;
-    border: 1px solid #ecece7;
-    -moz-box-shadow: 2px 2px 0 rgba(170, 160, 130, .5), 4px 4px 0 rgba(200, 190, 165, .5);
-    -webkit-box-shadow: 2px 2px 0 rgba(170, 160, 130, .5), 4px 4px 0 rgba(200, 190, 165, .5);
-    box-shadow: 2px 2px 0 rgba(170, 160, 130, .5), 4px 4px 0 rgba(200, 190, 165, .5);
+    background: #fcfcfa;
+    -moz-box-shadow: 0 2px 6px rgba(100, 100, 100, 0.3);
+    -webkit-box-shadow: 0 2px 6px rgba(100, 100, 100, 0.3);
+    box-shadow: 0 2px 6px rgba(100, 100, 100, 0.3);
+    margin-bottom: 25px;
 }
 .inner {
     padding: 30px;
@@ -155,8 +157,8 @@ pre code {
 }
 
 #main-header {
-    background: #000;
-    border-bottom: 4px solid #f8d575;
+    background: #272822;
+    border-bottom: 2px solid #cfcfcf;
     color: #ccc;
     min-height: 70px;
     -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, .25);
@@ -193,8 +195,8 @@ pre code {
     clear: both;
     margin-top: 20px;
     padding: 10px 0;
-    background: #450000;
-    border-bottom: 6px solid #3c0000;
+    background: #272822;
+    border-bottom: 6px solid #272822;
     color: #eee;
     font:  12px/1.5 Georgia, Times, "Times New Roman", serif;
 }
@@ -324,9 +326,10 @@ pre code {
 }
 #navigation {
     padding: 8px;
-    color: #999;
+    background: #fcfcfc;
     font-size: 14px;
-    margin-right: 300px;
+    margin-bottom: 10px;
+    margin-right: 330px;
 }
 .sidebar {
     position: absolute;
@@ -711,4 +714,39 @@ li.L9 {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+}
+
+@font-face {font-family: 'iconfont';
+    src: url('./font/iconfont.eot'); /* IE9*/
+    src: url('./font/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('./font/iconfont.woff') format('woff'), /* chrome、firefox */
+    url('./font/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+    url('./font/iconfont.svg#iconfont') format('svg'); /* iOS 4.1- */
+}
+.iconfont{
+    font-family:"iconfont" !important;
+    font-size:35px;font-style:normal;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-stroke-width: 0.2px;
+    -moz-osx-font-smoothing: grayscale;
+}
+a.contractmethod:hover{
+    text-decoration: none;
+    color:#49483e;
+}
+.contractmethod {
+    color: #272822;
+    text-decoration: none;
+    margin-left: 16px;
+    -moz-transition: all 0.2s ease-out 0s;
+    -webkit-transition: all 0.2s ease-out 0s;
+    transition: all 0.2s ease-out 0s;
+}
+.wc .friendship li {
+    float: left;
+    margin-right: 10px;
+    margin-left: 5px;
+}
+.wc .friendship li a {
+    width: 120px;
 }

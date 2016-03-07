@@ -2,8 +2,8 @@
   <section class="posts block">
 
  
-    <%posts.forEach(function(item){%>
-    <article class="post">
+    <%posts.forEach(function(item,index){%>
+    <article class="post <% if(index<(posts.length-1)){ %>block <%}%>">
       <h2 class="title">
           <a href="<%=site_url%>/post/<% if(item.slug){%><%=item.slug%><%}else{%><%=item.id%><%}%>" title="<%=item.title%>"><%=item.title%></a>
       </h2>
