@@ -28,7 +28,7 @@ module.exports = {
 			}else if(maxPage > currentPage){
 				nextPage = parseInt(currentPage) + 1;
 			}
-			models.sequelize.query('select title,content,created,createdAt,clicknum,slug from posts limit '+start+','+settings.postNum,{
+			models.sequelize.query('select title,content,created,createdAt,clicknum,slug from posts order by id desc limit '+start+','+settings.postNum,{
 		      	type: models.sequelize.QueryTypes.SELECT
 		    }).then(function(resultArr){
 				var result = resultArr;
