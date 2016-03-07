@@ -14,8 +14,11 @@ next edit file config/db.json and update your database password
 `cd [your server root]`
 
 `node index.js`
+when you see `listening on port 3000` that is ok
 
 #Init Admin Acount
+open http://localhost:3000/admin/install
+
 just input username and password (like test/123456)
 
 #Login 
