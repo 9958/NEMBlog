@@ -1,0 +1,13 @@
+<div class="block">
+    <div class="widget about">
+      <strong class="wt">周热门文章</strong>
+      <div class="wc">
+          <ul>
+              <%hotpost_week.forEach(function(item){%>
+              <li><a href="<%=site_url%>/post/<%=item.id%>" title="<%=item.title%>"><%=item.title%></a></li>
+              <%})%>
+          </ul>
+        <div class="sep10"></div>
+      </div>
+    </div>
+  </div>

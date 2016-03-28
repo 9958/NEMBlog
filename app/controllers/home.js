@@ -5,79 +5,114 @@ var moment = require('moment');
 var settings = require('../../config/settings');
 var util = require('../lib/util');
 var models  = require('../models');
+var async = require('async');
 
 module.exports = {
 	//homepage
 	index: function(req, res, next){
-		models.post.count().then(function(count){
-			var maxPage = parseInt(count / settings.postNum) + (count % settings.postNum ? 1:0);
-			var currentPage = isNaN(parseInt(req.params[0])) ? 1 : parseInt(req.params[0]);
-			if(currentPage == 0) currentPage = 1;
+		// 同步处理
+		async.parallel([
+			// ============1
+			function(callback){
+				models.post.count().then(function(count){
+					var maxPage = parseInt(count / settings.postNum) + (count % settings.postNum ? 1:0);
+					var currentPage = isNaN(parseInt(req.params[0])) ? 1 : parseInt(req.params[0]);
+					if(currentPage == 0) currentPage = 1;
 
-			var nextPage = currentPage;
-			var title = settings.name;
+					var nextPage = currentPage;
+					var title = settings.name;
 
-			if(currentPage > 1){
-				title +=" > 第" + currentPage + "页";
-			}
-
-			var start = (currentPage - 1) * settings.postNum;
-
-			if(maxPage < currentPage){
-				return;
-			}else if(maxPage > currentPage){
-				nextPage = parseInt(currentPage) + 1;
-			}
-			models.sequelize.query('select title,content,created,createdAt,clicknum,slug from posts order by id desc limit '+start+','+settings.postNum,{
-		      	type: models.sequelize.QueryTypes.SELECT
-		    }).then(function(resultArr){
-				var result = resultArr;
-				for(var i = 0; i<result.length; i++){
-					result[i].content = marked(result[i].content);
-					var time = result[i].created || result[i].createdAt;
-					result[i].addtime = moment(new Date(time)).format("YYYY-MM-DD");
-					if(result[i].content.indexOf('<!--more-->') > 0){
-						result[i].content = result[i].content.substring(0, result[i].content.indexOf('<!--more-->')) + '<div class="ReadMore"><a href="/post/' + result[i].id + '">[阅读更多]</a></div>';
+					if(currentPage > 1){
+						title +=" > 第" + currentPage + "页";
 					}
-				}
 
-				//hot post
-				models.post.findAll({
-					limit:12,
-					order: 'clicknum desc'
-				}).then(function(hot_post){
-					//tags 云
-					models.sequelize.query('select title from tags order by count desc limit 50',{
-			      		type: models.sequelize.QueryTypes.SELECT
-			        }).then(function(tags){
-						
+					var start = (currentPage - 1) * settings.postNum;
 
-						var index_obj = {
-							site_url: settings.site_url,
-							name: settings.name,
-							title: title,
-							keywords: settings.keywords,
-							description: settings.description,
-							posts: result,
-							crtP: currentPage,
-							maxP: maxPage,
-							nextP: nextPage,
-							hotpost: hot_post,
-							tags: tags,
-							user: {}
+					if(maxPage < currentPage){
+						return;
+					}else if(maxPage > currentPage){
+						nextPage = parseInt(currentPage) + 1;
+					}
+					models.sequelize.query('select id,title,content,created,createdAt,clicknum,slug from posts order by id desc limit '+start+','+settings.postNum,{
+				      	type: models.sequelize.QueryTypes.SELECT
+				    }).then(function(resultArr){
+						var result = resultArr;
+						for(var i = 0; i<result.length; i++){
+							result[i].content = marked(result[i].content);
+							var time = result[i].created || result[i].createdAt;
+							result[i].addtime = moment(new Date(time)).format("YYYY-MM-DD");
+							if(result[i].content.indexOf('<!--more-->') > 0){
+								result[i].content = result[i].content.substring(0, result[i].content.indexOf('<!--more-->')) + '<div class="ReadMore"><a href="/post/' + result[i].slug + '">[阅读更多]</a></div>';
+							}
+						}
+						var indexData = {
+							posts:result,
+							title:title,
+							currentPage:currentPage,
+							maxPage:maxPage,
+							nextPage:nextPage
 						};
-
-						res.render('theme/' + settings.theme + '/index',index_obj);
+						callback(null,indexData);
 					});
 
-					
-
 				});
-				
+			},
+		   	// ============2
+		  	function(callback){
+			    //tags 云
+				models.sequelize.query('select title from tags order by count desc limit 50',{
+		      		type: models.sequelize.QueryTypes.SELECT
+		        }).then(function(tags){
+					callback(null, tags);
+				});
+		  	},
+		  	// =============3
+		  	function(callback){
+			    //hot post
+				models.sequelize.query('select id,title,created,createdAt,clicknum,slug from posts order by clicknum desc limit 12',{
+				      	type: models.sequelize.QueryTypes.SELECT
+				}).then(function(hot_post){
+					callback(null, hot_post);
+				});
+		  	},
+		  	// =============4
+		  	function(callback){
+		  		var today = new Date();
+		  		var begin;
+		  		today.setTime(today.getTime()-7*24*3600*1000);
+          		//begin = today.format('yyyy-MM-dd');
+          		begin = moment(today).format("YYYY-MM-DD");
+          		today.setTime(today.getTime()-180*24*3600*1000);
+          		yearBegin = moment(today).format("YYYY-MM-DD");
+			    //最近7天热门 并按照点击量排序
+				models.sequelize.query('select id,title,created,createdAt,clicknum,slug from posts where  `updatedAt` > "'+ begin +'" and `created` > "' + yearBegin + '"  order by clicknum desc limit 12',{
+				      	type: models.sequelize.QueryTypes.SELECT
+				}).then(function(hot_post){
+					callback(null, hot_post);
+				});
+		  	}
+		],
+		function(err, results){
+		  	// 在这里处理data和data2的数据,每个文件的内容从results中获取
+		  	var index_obj = {
+				site_url: settings.site_url,
+				name: settings.name,
+				title: results[0].title,
+				keywords: settings.keywords,
+				description: settings.description,
+				posts: results[0].posts,
+				crtP: results[0].currentPage,
+				maxP: results[0].maxPage,
+				nextP: results[0].nextPage,
+				hotpost: results[2],
+				hotpost_week: results[3],
+				tags: results[1],
+				user: {}
+			};
 
-			});
-
+			res.render('theme/' + settings.theme + '/index',index_obj);
 		});
+		
 	},
 	post: function(req, res, next){
 		var id = req.params.id;
