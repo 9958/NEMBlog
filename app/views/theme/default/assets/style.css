@@ -773,3 +773,14 @@ a.contractmethod:hover{
 .wc .friendship li a {
     width: 120px;
 }
+
+.top {position: fixed;display: none;width: 55px;height: 55px;right: 50px;bottom: 70px;
+background: #49483e;color: #fff;font-size: 36px;line-height: 55px;text-align: center;
+cursor: pointer;border-radius: 40px;transition-property: background;transition-duration: 0.5s;
+-webkit-transition-property: background;-webkit-transition-duration: 0.5s;-moz-transition-property: background;
+-moz-transition-duration: 0.5s;
+}
+.f_link a{ padding-right:10px;}
+#div1 {position:relative;width:280px; height:280px;}
+#div1 a {position:absolute; top:0px; left:0px; font-family: Microsoft YaHei; color:#666; font-weight:bold; text-decoration:none; padding: 1px; }
+#div1 a:hover {border: 1px solid #690; color:#690;}
