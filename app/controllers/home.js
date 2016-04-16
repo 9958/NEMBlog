@@ -339,7 +339,7 @@ module.exports = {
 	},
 	tag: function(req, res, next){
 		models.post.findAll({
-			where: {tags:{$like:'%'+req.params.tag+'%'}}
+			where: {tags:{$like:'%'+req.params.tag+'%'},status:1}
 		}).then(function(result){
 			for(var i = 0; i < result.length; i++){
 				result[i].content = '';
@@ -390,7 +390,7 @@ module.exports = {
 	        return a.year < b.year
 	      };
 	      
-	      models.sequelize.query('select title,created,createdAt,clicknum,slug from posts',{
+	      models.sequelize.query('select title,created,createdAt,clicknum,slug from posts where status=1',{
 	      	type: models.sequelize.QueryTypes.SELECT
 	      }).then(function(archives){
 	      	var archiveList = [];
@@ -428,7 +428,7 @@ module.exports = {
 	        return a.year < b.year
 	      };
 	      
-	      models.sequelize.query('select title,created,createdAt,clicknum,slug from posts',{
+	      models.sequelize.query('select title,created,createdAt,clicknum,slug from posts where status=1',{
 	      	type: models.sequelize.QueryTypes.SELECT
 	      }).then(function(archives){
 	      	var archiveList = [];
