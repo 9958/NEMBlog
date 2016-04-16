@@ -18,7 +18,7 @@
     <ul>
       <% post_list.forEach(function(item){ %>
       <li>
-        <a href='/admin/post/edit/<%=item.id%>'><%=item.title%></a>
+        <%if(item.status==0){%>[草稿]<%}%><a href='/admin/post/edit/<%=item.id%>'><%=item.title%></a>
 
         <div class='action'>
               <span class='edit'>

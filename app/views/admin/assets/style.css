@@ -32,7 +32,7 @@ a {
 
 #wrapper {
     background: #F5F5F5;
-    width: 1024px;
+    width: 100%;
     margin: 0 auto 20px auto;
     overflow: hidden;
     position: relative;

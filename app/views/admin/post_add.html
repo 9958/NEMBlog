@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <title>管理中心</title>
+  <link rel="stylesheet" href="/admin/assets/style.css">
+  <link rel="stylesheet" href="/libs/editor-md/css/editormd.css">
+  
+</head>
+<body>
+<div id="wrapper">
+  <div id="nav">
+    <ul>
+      <li><a href="/admin">Home</a><span> ›</span></li>
+      <li><a href="/admin/post/write">New Post</a></li>
+    </ul>
+    <div class="quick"><a href="/admin/post/write" title="Write Post"><span>Write</span></a></div>
+  </div>
+  <form id='write_post' method='post'>
+    <div id='post_info'>
+      <div class='item title'>
+        <label for='post_title'><span>Title</span></label>
+        <input type='text' name='title' id='post_title' required=""/>
+      </div>
+      <div class='item slug'>
+        <label for='post_slug'><span>Slug</span></label>
+        <input type='text' name='slug' id='post_slug' required="">
+      </div>
+   
+      <div class='item tags'>
+        <label for='post_tags'><span>Tags</span></label>
+        <input type='text' name='tags' id='post_tags' required='' placeholder="标签，在英文逗号分割">
+      </div>
+        <div class='item tags'>
+        <label for='post_tags'><span>keywords</span></label>
+        <input type='text' name='keywords' id='keywords'  placeholder="关键词，在英文逗号分割">
+      </div>
+         <div class='item tags'>
+        <label for='post_tags'><span>description</span></label>
+        <input type='text' name='description' id='description'  placeholder="描述，在英文逗号分割">
+      </div>
+      <div class='clearfix'></div>
+    </div>
+    <div id='content'>
+      <div class="wmd-panel">
+        <div id="wmd-button-bar"></div>
+        <div id="test-editormd"></div>
+      </div>
+    </div>
+    <div id='meta'>
+      <button class='btn btn-small' style="left:0;"><a id='post-save' href="javascript:">保存草稿</a></button>
+      <button class='btn btn-small'><a id='post' href="javascript:">现在发布</a></button>
+    </div>
+  </form>
+</div>
+<script src="/libs/editor-md/examples/js/jquery.min.js"></script>
+<script src="/libs/cal.js"></script>
+<script src="/libs/editor-md/editormd.js"></script>
+<script type="text/javascript">
+    var testEditor;
+    
+    $(function() {
+        
+        $.get('/libs/editor-md/examples/test.md', function(md){
+            testEditor = editormd("test-editormd", {
+                width: "100%",
+                height: 740,
+                path : '/libs/editor-md/lib/',
+                theme : "dark",
+                previewTheme : "dark",
+                editorTheme : "pastel-on-dark",
+                markdown : md,
+                codeFold : true,
+                //syncScrolling : false,
+                saveHTMLToTextarea : true,    // 保存 HTML 到 Textarea
+                searchReplace : true,
+                //watch : false,                // 关闭实时预览
+                htmlDecode : "style,script,iframe|on*",            // 开启 HTML 标签解析，为了安全性，默认不开启    
+                //toolbar  : false,             //关闭工具栏
+                //previewCodeHighlight : false, // 关闭预览 HTML 的代码块高亮，默认开启
+                emoji : true,
+                taskList : true,
+                tocm            : true,         // Using [TOCM]
+                tex : true,                   // 开启科学公式TeX语言支持，默认关闭
+                flowChart : true,             // 开启流程图支持，默认关闭
+                sequenceDiagram : true,       // 开启时序/序列图支持，默认关闭,
+                //dialogLockScreen : false,   // 设置弹出层对话框不锁屏，全局通用，默认为true
+                //dialogShowMask : false,     // 设置弹出层对话框显示透明遮罩层，全局通用，默认为true
+                //dialogDraggable : false,    // 设置弹出层对话框不可拖动，全局通用，默认为true
+                //dialogMaskOpacity : 0.4,    // 设置透明遮罩层的透明度，全局通用，默认值为0.1
+                //dialogMaskBgColor : "#000", // 设置透明遮罩层的背景颜色，全局通用，默认为#fff
+                imageUpload : true,
+                imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                imageUploadURL : "./php/upload.php",
+                onload : function() {
+                    console.log('onload', this);
+                    //this.fullscreen();
+                    //this.unwatch();
+                    //this.watch().fullscreen();
+
+                    //this.setMarkdown("#PHP");
+                    //this.width("100%");
+                    //this.height(480);
+                    //this.resize("100%", 640);
+                }
+            });
+        });
+        
+        // 保存草稿
+        $('#post-save').click(function(){
+          post_article(0);
+        });
+
+        // 发布
+        $('#post').click(function(){
+          post_article(1);
+        });
+        
+    });
+
+    function post_article(status){
+      var data = {
+        title: $('#post_title').val(),
+        slug: $('#post_slug').val(),
+        content: testEditor.getMarkdown(),
+        keywords: $('#keywords').val(),
+        description: $('#description').val(),
+        tags: $('#post_tags').val(),
+        status: status
+      };
+      console.dir(data);
+      $.ajax({
+        'url': '/admin/post/write',
+        'type': 'post',
+        'datatype': 'json',
+        'data': data,
+        'error': function(){
+
+        },
+        'success': function(msg){
+          if(msg.success){
+            alert('提交成功！');
+            location.href = location.href;
+          }
+        }
+      });
+    }
+</script>
+
+</body>

@@ -19,13 +19,15 @@ module.exports = {
   },
   postWrite: function(req, res){
     if(req.method == "GET"){
-        res.render('admin/post_write', {layout: false});
+        res.render('admin/post_add', {layout: false});
     }else if(req.method == "POST"){
-        var post = _.pick(req.body, 'title', 'slug','content','keywords','description','tags');
+        var post = _.pick(req.body, 'title', 'slug','content','keywords','description','tags','status');
         post.content_html = marked(post.content);
-        post.status = 1;
+
+        //post.status = 1;
         models.post.create(post).then(function(result){
-            res.redirect('/admin/post/edit/' + result.id);
+          res.send({success:1,id:result.id});
+            // res.redirect('/admin/post/edit/' + result.id);
         });
     }
   },
@@ -33,16 +35,17 @@ module.exports = {
     if(req.method == "GET"){
         var id = req.params.id;
         models.post.findById(id).then(function(result){
-            res.render('admin/post_edit', {layout: false, post: result});
+            res.render('admin/post_update', {layout: false, post: result});
         }).catch(function(error) {
             res.redirect('/admin/post');
         });
     }else if(req.method == "POST"){
-        var post = _.pick(req.body, 'title', 'slug','content','keywords','description','tags');
+        var post = _.pick(req.body, 'title', 'slug','content','keywords','description','tags','status');
         post.content_html = marked(post.content);
-        post.status = 1;
+        //console.log(req.body.id);
         models.post.update(post,{where:{id: req.body.id}}).then(function(){
-            res.redirect('/admin/post/edit/' + req.body.id);
+          res.send({success:1});
+            //res.redirect('/admin/post/edit/' + req.body.id);
         });
     }
   },

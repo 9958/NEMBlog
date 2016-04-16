@@ -33,7 +33,7 @@ module.exports = {
 					}else if(maxPage > currentPage){
 						nextPage = parseInt(currentPage) + 1;
 					}
-					models.sequelize.query('select id,title,content,created,createdAt,clicknum,slug from posts order by id desc limit '+start+','+settings.postNum,{
+					models.sequelize.query('select id,title,content,created,createdAt,clicknum,slug from posts where status=1 order by id desc limit '+start+','+settings.postNum,{
 				      	type: models.sequelize.QueryTypes.SELECT
 				    }).then(function(resultArr){
 						var result = resultArr;
@@ -69,7 +69,7 @@ module.exports = {
 		  	// =============3
 		  	function(callback){
 			    //hot post
-				models.sequelize.query('select id,title,created,createdAt,clicknum,slug from posts order by clicknum desc limit 12',{
+				models.sequelize.query('select id,title,created,createdAt,clicknum,slug from posts where status=1 order by clicknum desc limit 12',{
 				      	type: models.sequelize.QueryTypes.SELECT
 				}).then(function(hot_post){
 					callback(null, hot_post);
@@ -85,7 +85,7 @@ module.exports = {
           		today.setTime(today.getTime()-180*24*3600*1000);
           		yearBegin = moment(today).format("YYYY-MM-DD");
 			    //最近7天热门 并按照点击量排序
-				models.sequelize.query('select id,title,created,createdAt,clicknum,slug from posts where  `updatedAt` > "'+ begin +'" and `created` > "' + yearBegin + '"  order by clicknum desc limit 12',{
+				models.sequelize.query('select id,title,created,createdAt,clicknum,slug from posts where status=1 and  `updatedAt` > "'+ begin +'" and `created` > "' + yearBegin + '"  order by clicknum desc limit 12',{
 				      	type: models.sequelize.QueryTypes.SELECT
 				}).then(function(hot_post){
 					callback(null, hot_post);
@@ -158,7 +158,7 @@ module.exports = {
 				commentWhereOr.push({post_slug: post.slug});
 			}
 			//get new post
-			models.sequelize.query('select title,created,createdAt,clicknum,slug from posts order by id desc limit 10',{
+			models.sequelize.query('select title,created,createdAt,clicknum,slug from posts where status=1 order by id desc limit 10',{
 		      	type: models.sequelize.QueryTypes.SELECT
 		    }).then(function(newposts){
 				var dataObj = {
@@ -208,11 +208,14 @@ module.exports = {
 
 		var keyword = req.query.keyword;
 		var searchWhere = {};
+		var searchWhereStr = ' status = 1 ';
 		if(keyword && keyword != ''){
-			var OrWhere = [];
+			var OrWhere = [{status:1}];
 			OrWhere.push({title:{$like: '%'+keyword+'%'}});
 			OrWhere.push({tags:{$like: '%'+keyword+'%'}});
 			searchWhere = {$or: OrWhere};
+			// 字符串组合
+			searchWhereStr +=' and (title like \'%'+keyword+'%\' or tags like \'%'+keyword+'%\' )';
 		}
 
 		models.post.count({where:searchWhere}).then(function(count){
@@ -230,21 +233,19 @@ module.exports = {
 			}
 
 			var start = (currentPage - 1) * pagesize;
+			
 
 			if(maxPage < currentPage){
-				return;
+				maxPage = currentPage;
 			}else if(maxPage > currentPage){
 				nextPage = parseInt(currentPage) + 1;
 			}
 
 			var archiveList = [];
-			models.post.findAndCountAll({
-				where:searchWhere,
-				offset: start,
-				limit: pagesize,
-				order:'id desc'
-			}).then(function(resultArr){
-				var archives = resultArr.rows;
+			models.sequelize.query('select title,created,createdAt,clicknum,slug from posts where '+searchWhereStr+' order by id desc limit '+start+','+pagesize,{
+		      	type: models.sequelize.QueryTypes.SELECT
+		    }).then(function(resultArr){
+				var archives = resultArr;
 				for(var i = 0; i<archives.length; i++){
 
 					var time = archives[i].created || archives[i].createdAt;
