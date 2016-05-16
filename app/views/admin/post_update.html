@@ -40,7 +40,7 @@
         <input type='text' name='description' id='description'  value="<%=post.description%>" placeholder="描述，在英文逗号分割">
       </div>
       <div class='clearfix'></div>
-      <div style="display: none;" id="post_content"><%-post.content%></div>
+      <div style="display: none;" id="post_content"><%- post.content %></div>
     </div>
     <div id='content'>
       <div class="wmd-panel">
@@ -72,7 +72,7 @@
               theme : "dark",
               previewTheme : "dark",
               editorTheme : "pastel-on-dark",
-              markdown : $('#post_content').html(),
+              markdown : html_decode($("#post_content").html()),
               codeFold : true,
               //syncScrolling : false,
               saveHTMLToTextarea : true,    // 保存 HTML 到 Textarea
@@ -121,6 +121,33 @@
         
     });
 
+function html_encode(str)   
+{   
+  var s = "";   
+  if (str.length == 0) return "";   
+  s = str.replace(/&/g, "&amp;");   
+  s = s.replace(/</g, "&lt;");   
+  s = s.replace(/>/g, "&gt;");   
+  s = s.replace(/ /g, "&nbsp;");   
+  s = s.replace(/\'/g, "&#39;");   
+  s = s.replace(/\"/g, "&quot;");   
+  s = s.replace(/\n/g, "<br>");   
+  return s;   
+}   
+ 
+function html_decode(str)   
+{   
+  var s = "";   
+  if (str.length == 0) return "";   
+  //s = str.replace(/&amp;/g, "&");   
+  //s = s.replace(/&lt;/g, "<");   
+  s = str.replace(/&gt;/g, ">");   
+  //s = s.replace(/&nbsp;/g, " ");   
+  //s = s.replace(/&#39;/g, "\'");   
+  //s = s.replace(/&quot;/g, "\"");   
+  //s = s.replace(/<br>/g, "\n");   
+  return s;   
+}
     function post_article(status){
       var data = {
         id: $('#post_old_id').val(),
