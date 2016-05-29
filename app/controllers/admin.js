@@ -34,11 +34,21 @@ module.exports = {
   postEdit: function(req, res){
     if(req.method == "GET"){
         var id = req.params.id;
-        models.post.findById(id).then(function(result){
-            res.render('admin/post_update', {layout: false, post: result});
-        }).catch(function(error) {
-            res.redirect('/admin/post');
-        });
+        var ajax = req.query.ajax;
+        if(ajax && ajax == 1){
+          models.post.findById(id).then(function(result){
+              res.send({success:1,result:result});
+          }).catch(function(error) {
+              res.send({success:0,result:[]});
+          });
+        }else{
+          models.post.findById(id).then(function(result){
+              res.render('admin/post_update', {layout: false, post: result});
+          }).catch(function(error) {
+              res.redirect('/admin/post');
+          });
+        }
+        
     }else if(req.method == "POST"){
         var post = _.pick(req.body, 'title', 'slug','content','keywords','description','tags','status');
         post.content_html = marked(post.content);
